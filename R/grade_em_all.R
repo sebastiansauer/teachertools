@@ -1,16 +1,24 @@
-
-# helper functions:
-
-
-
+#' Grade em all
+#'
+#' Assigns grades to exams
+#'
+#' This function assigns a grade to each student (row)
+#' drawing upon the exam items in the input csv moodle file.
+#' Some preprocssing is being done, such as cleaning the col names.
+#'
+#' @param data_path_moodle_csv A csv file, possible coming from moodle with exam items. See details.
+#' @param grading_scheme Defines thresholds for grades
+#' @param verbose if true, additional processing infos are printed
+#' @param n_bonus_points Be kind to your students
+#' @param comments comments passed on to each student
+#'
+#' @return csv file with grades
+#' @export
+#'
+#' @examples
+#' \dontrun{grade_em_all(data.csv)}
+#'
 grade_em_all <- function(data_path_moodle_csv, grading_scheme = NULL, verbose = TRUE, n_bonus_points = 0, comments = NULL){
-
-  grade_em <- function(thresholds, values){
-
-    grades_scheme <- c(5, 4, 3.7, 3.3, 3.0, 2.7, 2.3, 2, 1.7, 1.3, 1)
-
-    grades <- cut(values, breaks = thresholds, labels = grades_scheme)
-  }
 
 
   d_raw <- readr::read_csv(data_path_moodle_csv)
@@ -90,45 +98,69 @@ grade_em_all <- function(data_path_moodle_csv, grading_scheme = NULL, verbose = 
     dplyr::relocate(n_correct, .after = bewertung)
 
 
-  if (is.null(grading_scheme)) grading_scheme <- c(0, 51, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100)
+  if (is.null(grading_scheme)) grading_scheme <- c(51, 55, 60, 65, 70, 75, 80, 85, 90, 95)
 
-  grades_df <-
-    tibble::tibble(
-      # equidistant thresholds:
-      thresholds = c(0,
-                     seq(from = 51, to = 100,
-                         length.out = 11)),
-      # more milder thresholds:
-      thresholds2 = grading_scheme,
-      grades = c(5, 4, 3.7, 3.3, 3.0, 2.7, 2.3, 2, 1.7, 1.3, 1, .7)) %>%
-    dplyr::mutate(grade_id = nrow(.):1 - 1) %>%
-    dplyr::mutate(thresholds = round(thresholds)) %>%
-    tibble::rownames_to_column() %>%
-    dplyr::select(thresholds_points = "thresholds2",
-                  grades) %>%
-    dplyr::filter(grades != 0.7)
+  stopifnot(length(grading_scheme) == 10)
+
+  # grades_df <-
+  #   tibble::tibble(
+  #     # equidistant thresholds:
+  #     thresholds = c(
+  #                    seq(from = 51, to = 95,
+  #                        length.out = 10)),
+  #     # more milder thresholds:
+  #     thresholds2 = grading_scheme,
+  #     grades = c(5, 4, 3.7, 3.3, 3.0, 2.7, 2.3, 2, 1.7, 1.3, 1)) %>%
+  #   dplyr::mutate(grade_id = nrow(.):1 - 1) %>%
+  #   #dplyr::mutate(thresholds = round(thresholds)) %>%
+  #   tibble::rownames_to_column() %>%
+  #   #dplyr::select(thresholds_points = "thresholds2",
+  #   #             grades) %>%
+  #   dplyr::filter(grades != 0.7)
+
+  # d7 <-
+  #   d6c %>%
+  #   # counts how many thresholds are surpassed by the student:
+  #   dplyr::mutate(grade_id_old = purrr::map_dbl(bewertung,
+  #                                               .f = ~ {`>`(grades_df$thresholds, .x) %>% sum()} )) %>%
+  #   dplyr::mutate(grade_id = purrr::map_dbl(bewertung,
+  #                                           .f = ~ {`>`(grades_df$thresholds2, .x) %>% sum()} ))
 
   d7 <-
     d6c %>%
-    # counts how many thresholds are surpassed by the student:
-    dplyr::mutate(grade_id_old = purrr::map_dbl(bewertung,
-                                                .f = ~ {`>`(grades_df$thresholds2, .x) %>% sum()} )) %>%
-    dplyr::mutate(grade_id = purrr::map_dbl(bewertung,
-                                            .f = ~ {`>`(grades_df$thresholds2, .x) %>% sum()} ))
+    mutate(grades =
+             case_when(bewertung >= grading_scheme[10] ~ 1,
+                       bewertung >= grading_scheme[9] ~ 1.3,
+                       bewertung >= grading_scheme[8] ~ 1.7,
+                       bewertung >= grading_scheme[7] ~ 2.0,
+                       bewertung >= grading_scheme[6] ~ 2.3,
+                       bewertung >= grading_scheme[5] ~ 2.7,
+                       bewertung >= grading_scheme[4] ~ 3.0,
+                       bewertung >= grading_scheme[3] ~ 3.3,
+                       bewertung >= grading_scheme[2] ~ 3.7,
+                       bewertung >= grading_scheme[1] ~ 4.0,
+                       bewertung < grading_scheme[1] ~ 5))
+
+
+  if (verbose) cat("case_when grading used")
+
+  # d8 <-
+  #   d7 %>%
+  #   dplyr::left_join(grades_df, by  = "grade_id")
 
   d8 <-
     d7 %>%
-    dplyr::left_join(grades_df, by  = "grade_id")
-
-  d8 <-
-    d8 %>%
     dplyr::filter(nachname != "Gesamtdurchschnitt") %>%
     dplyr::arrange(nachname)
 
-  out <-
+  d9 <-
     d8 %>%
+    mutate(pass = ifelse(grades <= 4, TRUE, FALSE))
+
+  out <-
+    d9 %>%
     select(nachname, vorname, e_mail_adresse, bewertung,
-           n_correct, grades)
+           n_correct, grades, pass)
 
   return(out)
 
