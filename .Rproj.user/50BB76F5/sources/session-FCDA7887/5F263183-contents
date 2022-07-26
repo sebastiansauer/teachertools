@@ -1,0 +1,9 @@
+s <- c("sdfjdfa", "sdjkfl")
+
+s2 <- 'cover:
+    image: "https://raw.githubusercontent.com/sebastiansauer/datenwerk/main/static/img/cups3.png"'
+
+
+s3 <- c(s, s2)
+
+s3

@@ -1,0 +1,28 @@
+{
+    "id": "D1FBB892",
+    "path": "~/github-repos/teachertools/R/write_yamlrmdfile.R",
+    "project_path": "R/write_yamlrmdfile.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1658840654325.0,
+    "source_on_save": false,
+    "relative_order": 3,
+    "properties": {
+        "tempName": "Untitled2",
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "33,27",
+        "scrollLine": "0",
+        "marks": "<:0,0\n>:0,0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1658841225,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1658841225472,
+    "read_only": false,
+    "read_only_alternatives": []
+}
