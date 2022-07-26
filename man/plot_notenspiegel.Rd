@@ -4,7 +4,7 @@
 \alias{plot_notenspiegel}
 \title{Plot Notenspiegel}
 \usage{
-plot_notenspiegel(data, plot_title = "")
+plot_notenspiegel(data, plot_title = "Notenverteilung")
 }
 \arguments{
 \item{data}{containing grades}

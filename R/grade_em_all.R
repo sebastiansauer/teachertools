@@ -21,6 +21,8 @@
 grade_em_all <- function(data_path_moodle_csv, grading_scheme = NULL, verbose = TRUE, n_bonus_points = 0, comments = NULL){
 
 
+  grade_percentage_points <- function(data_path_moodle_csv, verbose, n_bonus_points) {
+
   d_raw <- readr::read_csv(data_path_moodle_csv)
   d2 <- janitor::clean_names(d_raw)
 
@@ -97,6 +99,15 @@ grade_em_all <- function(data_path_moodle_csv, grading_scheme = NULL, verbose = 
     dplyr::mutate(n_correct = round(bewertung / one_correct)) %>%
     dplyr::relocate(n_correct, .after = bewertung)
 
+  return(d6c)
+
+  }
+
+
+  d6c <- grade_percentage_points(data_path_moodle_csv = data_path_moodle_csv,
+                                 verbose = verbose,
+                                 n_bonus_points = n_bonus_points)
+
 
   if (is.null(grading_scheme)) grading_scheme <- c(51, 55, 60, 65, 70, 75, 80, 85, 90, 95)
 
@@ -155,12 +166,13 @@ grade_em_all <- function(data_path_moodle_csv, grading_scheme = NULL, verbose = 
 
   d9 <-
     d8 %>%
-    mutate(pass = ifelse(grades <= 4, TRUE, FALSE))
+    mutate(pass = ifelse(grades <= 4, TRUE, FALSE)) %>%
+    mutate(comments = comments)
 
   out <-
     d9 %>%
     select(nachname, vorname, e_mail_adresse, bewertung,
-           n_correct, grades, pass)
+           n_correct, grades, pass, comments)
 
   return(out)
 

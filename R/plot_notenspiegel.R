@@ -15,25 +15,30 @@
 #'
 #' @examples
 #' \dontrun{plot_notenspiegel(grades_data)}
-plot_notenspiegel <- function(data, plot_title = ""){
+plot_notenspiegel <- function(data, plot_title = "Notenverteilung"){
 
-  grades <- c(5, 4, 3.7, 3.3, 3.0, 2.7, 2.3, 2, 1.7, 1.3, 1, .7)
+  grades_scheme <- c(5, 4, 3.7, 3.3, 3.0, 2.7, 2.3, 2, 1.7, 1.3, 1.0)
 
   notenschnitt <- round(mean(data$grades, na.rm = TRUE), 1)
 
-  data %>%
+  bestehensquote <- round(sum(data$pass[data$pass == TRUE]) / nrow(data), 2)
+
+data_count <-
+    data %>%
     count(grades) %>%
-    mutate(bestanden = ifelse(grades > 4, FALSE, TRUE)) %>%
+    mutate(bestanden = ifelse(grades > 4, FALSE, TRUE))
+
+data_count %>%
     ggplot(aes(x = grades, y = n)) +
     geom_col(aes(fill = bestanden)) +
-    scale_x_continuous(breaks = grades[grades != 0.7]) +
+    scale_x_continuous(breaks = grades_scheme)+
     geom_vline(xintercept = notenschnitt, linetype = "dashed") +
     geom_text(aes(label = n)) +
-    #theme_ipsum_rc() +
     labs(x = "Noten",
          y = "Anzahl",
          title = plot_title,
-         subtitle = paste0("Notenschnitt: ", notenschnitt),
-         caption = paste0("n = ", nrow(data)))
+         subtitle = paste0("Mittelwert: ", notenschnitt, "; Bestehensquote: ", bestehensquote),
+         caption = paste0("n = ", nrow(data))) +
+    annotate("label", x = notenschnitt, y = max(data_count$n), label = paste0("MW: ", notenschnitt))
 
 }
