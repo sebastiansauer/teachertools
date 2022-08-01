@@ -1,26 +1,19 @@
-# helper functions:
 
 
-
-
-
-
-#' Grade em
+#' get_grade_scheme
 #'
-#' This function assigns grades
+#' Get grade scheme as numeric vector
 #'
-#' @param values student's percentage points (one row per student)
-#' @param thresholds thresholds for a given grade
+#' Returns one (of possibly several) grading scheme
 #'
-#' @return grades per student
+#' @param scheme which scheme (int)? Currently only 1 scheme is implemented
+#'
+#' @return scheme (numeric)
 #' @export
 #'
 #' @examples
-#' \dontrun{grade_em(thresholds, values)}
-grade_em <- function(thresholds, values){
+#' \dontrun{get_grade_scheme()}
+get_grade_scheme <- function(scheme = 1){
 
-  grades_scheme <- c(5, 4, 3.7, 3.3, 3.0, 2.7, 2.3, 2, 1.7, 1.3, 1)
-
-  grades <- cut(values, breaks = thresholds, labels = grades_scheme)
+  if (scheme == 1) grades_scheme <- c(5, 4, 3.7, 3.3, 3.0, 2.7, 2.3, 2, 1.7, 1.3, 1)
 }
-
