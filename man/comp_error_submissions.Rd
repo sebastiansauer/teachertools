@@ -6,7 +6,7 @@
 \usage{
 comp_error_submissions(
   path_to_submissions = "Submissions/",
-  verbose = TRUE,
+  verbose = FALSE,
   path_to_train_data,
   path_to_test_data,
   max_row = NULL,
@@ -14,7 +14,7 @@ comp_error_submissions(
   name_output_var = "y",
   name_id_var = "id",
   name_pred_column = "pred",
-  error_fun = mae
+  error_fun = yardstick::mae
 )
 }
 \arguments{

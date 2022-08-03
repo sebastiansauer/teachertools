@@ -31,27 +31,27 @@ join_gradinglists <- function(moodle_grading_d, course_file, comments = NULL) {
 
   results_df <-
     participants_results_df %>%
-    left_join({moodle_grading_d %>%
-        select(-bewertung, bewertung = grades)}, by = c("nachname", "vorname") ) %>%
-    select(1:4, bewertung) %>%
-    mutate(bemerkung = comments)
+    dplyr::left_join({moodle_grading_d %>%
+        dplyr::select(-bewertung, bewertung = grades)}, by = c("nachname", "vorname") ) %>%
+    dplyr::select(1:4, bewertung) %>%
+    dplyr::mutate(bemerkung = comments)
 
   if (nrow(moodle_grading_d) != nrow(participants_results_df)){
     warning("Row numbers do not match. You will need to carefully theck the discrepancies.")
 
     anti_results_df <-
       results_df %>%
-      select(nachname, vorname, bewertung) %>%
-      anti_join(participants_results_df)
+      dplyr::select(nachname, vorname, bewertung) %>%
+      dplyr::anti_join(participants_results_df)
 
     anti_results_df2 <-
       participants_results_df %>%
-      select(nachname, vorname) %>%
-      anti_join(select(moodle_grading_d, vorname, nachname, bewertung = grades))
+      dplyr::select(nachname, vorname) %>%
+      dplyr::anti_join(select(moodle_grading_d, vorname, nachname, bewertung = grades))
 
     anti_results_df3 <-
       anti_results_df %>%
-      bind_rows(anti_results_df2)
+      dplyr::bind_rows(anti_results_df2)
 
     print("The following names could NOT be matched and need be treated manually:\n")
 

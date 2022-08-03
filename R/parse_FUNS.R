@@ -16,20 +16,19 @@ parse_last_names <- function(submission){
 
 
   # the right regex depends on the string to be parsed:
-  last_name <-
-    stringr::str_to_lower(submission) %>%
-    str_extract("^(\\S+\\s+\\S+?)_") %>%
-    str_remove("_") %>%
-    str_split(pattern = boundary("word")) %>%
-    simplify() %>%
-    tail(1)  # gets last element of string
-
   # last_name <-
   #   stringr::str_to_lower(submission) %>%
-  #   stringr::str_extract("(^.+)_(.+)_.*(\\d+)") %>%
-  #   str_extract("^(\\S+\\s+\\S+?)_") %>% str_remove("_")
-  #   stringr::str_split(pattern = "_") %>%
-  #   purrr::map_chr(~magrittr::extract(., 1))
+  #   str_extract("^(\\S+\\s+\\S+?)_") %>%
+  #   str_remove("_") %>%
+  #   str_split(pattern = boundary("word")) %>%
+  #   simplify() %>%
+  #   tail(1)  # gets last element of string
+
+  last_name <-
+    stringr::str_to_lower(submission) %>%
+    stringr::str_extract("(^.+)_(.+)_.*(\\d+)") %>%
+    stringr::str_split(pattern = "_") %>%
+    purrr::map_chr(~magrittr::extract(., 1))
 
   return(last_name)
 }
@@ -54,20 +53,20 @@ parse_first_names <- function(submission){
   # Parse first names:
 
   # the right regex depends on the string to be parsed:
-  first_name <-
-    stringr::str_to_lower(submission) %>%
-    str_extract("^(\\S+\\s+\\S+?)_") %>%
-    str_remove("_") %>%
-    str_split(pattern = boundary("word")) %>%
-    simplify() %>%
-    head(1)  # gets first element of string
-
   # first_name <-
   #   stringr::str_to_lower(submission) %>%
-  #   #stringr::str_extract("(^.+) (.+)_.*(\\d+)") %>%
-  #   stringr::str_split(pattern = "_") %>%
-  #   purrr::map_chr(~magrittr::extract(., 2))
-  # return(first_name)
+  #   str_extract("^(\\S+\\s+\\S+?)_") %>%
+  #   str_remove("_") %>%
+  #   str_split(pattern = boundary("word")) %>%
+  #   simplify() %>%
+  #   head(1)  # gets first element of string
+
+  first_name <-
+    stringr::str_to_lower(submission) %>%
+    stringr::str_extract("(^.+)_(.+)_.*(\\d+)") %>%
+    stringr::str_split(pattern = "_") %>%
+    purrr::map_chr(~magrittr::extract(., 2))
+  return(first_name)
 }
 
 
@@ -91,8 +90,8 @@ parse_matrikelnummer <- function(submission, n_digits = 8) {
 
   matrikelnummer <-
     stringr::str_to_lower(submission) %>%
-    str_extract("_\\d+_") %>%
-    str_remove_all("_") %>%
+    stringr::str_extract("_\\d+_") %>%
+    stringr::str_remove_all("_") %>%
     stringr::str_pad(width = n_digits, pad = "0", side = "left")
 
   # matrikelnummer <-

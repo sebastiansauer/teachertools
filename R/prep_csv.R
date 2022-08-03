@@ -23,12 +23,12 @@
 #' `data.table::fread` is able to guess formats. However, for the train and test data file, a standard csv file is expected (comma as deliminators, US centric locale).
 #'
 #' The function returns a data frame with the the columns mentioned above (id, pred).
-#' The returned dataframes contains to attributres, "comments_to_student", where hints about gross errors are mentioned, and "fail" to indicate pass/fail of the test, here if gross errors (eg., no data submitted) are present.
+#' The returned dataframes contains some attributes: (1) "comments_to_student", where hints about gross errors are mentioned, (2) "fail" to indicate pass/fail of the test, here if gross errors (eg., no data submitted) are present, (3), "na_prop": the proportion of na in the prediction column.
 #'
 #' @param submission_file name of csv file with predictions (chr)
 #' @param path_to_submissions path to submission folder with submission files (chr)
-#' @param path_to_train_data  path to train data, regular csv file expected (chr)
-#' @param path_to_test_data path to test data, regular csv file expected  (Chr)
+#' @param path_to_train_data  path to train data file, regular csv file expected (chr)
+#' @param path_to_test_data path to test data file, regular csv file expected  (Chr)
 #' @param max_row how many rows should be prepared maximally (int)?
 #' @param start_id number of the first id (int)
 #' @param name_output_var name of the variable to be predicted (chr)
@@ -60,7 +60,7 @@ prep_csv <- function(submission_file,
   if (verbose) cat("This is function `prep_csv` speaking.\n")
 
   # Make sure the paths are ending with a slash:
-  if (!str_detect(path_to_submissions, "/$")) path_to_submissions <- str_c(path_to_submissions, "/")
+  if (!stringr::str_detect(path_to_submissions, "/$")) path_to_submissions <- stringr::str_c(path_to_submissions, "/")
   if (verbose) cat(paste0("Path to submissions is: ", path_to_submissions, "\n"))
 
   stopifnot(start_id > 0)
@@ -72,29 +72,36 @@ prep_csv <- function(submission_file,
     cat("Now reading test (control/solution) df file.\n")
     cat(paste0("Assuming this path/file name: ", path_to_test_data, "\n"))
   }
-  solution_df <- readr::read_csv(solution_df_file,
-                                 show_col_types = FALSE)
-  if (verbose) glimpse(solution_df)
-  cat("\n")
 
+  # import test/olution df file:
+  #stopifnot(file.exists(path_to_test_data))  # appears not to work for remote files
+  solution_df <- readr::read_csv(path_to_test_data,
+                                 show_col_types = FALSE)
+  if (verbose) dplyr::glimpse(solution_df)
+  cat("\n")
   stopifnot(any(class(solution_df) == "data.frame"))
 
 
 
-  if (verbose) print(paste0("Now processing: ", submission_file))
+  # Should the following part be moved to a own function,
+  # such as `is_valid_csv`?
+
+  # read and prepare a submission file
+  if (verbose) print(paste0("*****Now processing: ", submission_file, "*****"))
 
   x <- data.table::fread(paste0(path_to_submissions, submission_file), header = TRUE)
   stopifnot(any(class(x) == "data.frame"))
   if (verbose){
-    cat(paste0("Dimension of submissions file: ", str_c(dim(x))))
+    cat(paste0("Dimension of submissions file: ", str_c(dim(x), collapse = "; ")))
     cat("\n")
-    cat(paste0("Column names of submission file: ", names(x)))
+    cat(paste0("Column names of submission file: ", str_c(names(x), collapse = "; ")))
   }
 
   # all names to lower:
   names(x) <- base::tolower(base::names(x))
 
 
+  # find column with predictions:
   names_pred <-
     stringr::str_extract(names(x), name_pred_column) %>%
     purrr::discard(is.na)
@@ -244,11 +251,18 @@ prep_csv <- function(submission_file,
     solution_df %>%
     dplyr::rename(y = {{name_output_var}})
 
+  # Make sure "id" is of type integer:
+  solution_df <-
+    solution_df %>%
+    dplyr::mutate(id = as.integer(id))
+
   if (!any(names(solution_df) == "y")) {
     cat(paste0("Names of columns in solution_df: "), names(solution_df))
     stop("`y` not among column names of solution df!")
   }
 
+
+  # join solution data with submission data:
   x_joined <-
     solution_df %>%
     dplyr::select(id, y) %>%
@@ -263,8 +277,9 @@ prep_csv <- function(submission_file,
 
   n_na <-
     x2 %>%
-    dplyr::summarise(na_n = sum(is.na(pred)),
-              na_prop = na_n/n())
+    dplyr::summarise(
+      na_n = sum(is.na(pred)),
+      na_prop = na_n/n())
 
   if (verbose) cat("Sum of NA in predictions: ", n_na$na_n, "\n")
   if (verbose) cat("Proportion of NA in predictions: ", n_na$na_prop, "\n")
@@ -274,25 +289,29 @@ prep_csv <- function(submission_file,
   if (n_na$na_prop[1] > .99) {
     cat("Warning: More than 99% NA in prediction.\n")
     cat("Setting all NA to mean of y (output variable) in train data set.\n")
-
-    if (verbose) cat("Now reading train data. Expecting stanrdard CSV.\n")
-    train_df <- readr::read_csv(path_to_train_data,
-                         show_col_types = FALSE)
-    stopifnot(any(class(train_df) == "data.frame"))
-    stopifnot(any(names(train_df) == name_output_var))
-
-    # Rename outcome variable in train data to "y":
-    train_df <-
-      train_df %>%
-      rename(y = {{name_output_var}}) %>%
-      mutate(y = as.numeric(y))
-
-
-
-    x2 <-
-      x2 %>%
-      dplyr::mutate(pred = tidyr::replace_na(pred, base::mean(train_df$y, na.rm = TRUE)))
   }
+
+
+  # reading training data, only to get the mean y-value:
+  if (verbose) cat("Now reading train data. Expecting stanrdard CSV.\n")
+  #stopifnot(file.exists(path_to_train_data))
+  train_df <- readr::read_csv(path_to_train_data,
+                              show_col_types = FALSE)
+  stopifnot(any(class(train_df) == "data.frame"))
+  stopifnot(any(names(train_df) == name_output_var))
+
+  # Rename outcome variable in train data to "y":
+  train_df <-
+    train_df %>%
+    dplyr::rename(y = {{name_output_var}}) %>%
+    dplyr::mutate(y = as.numeric(y))
+
+
+
+    # x2 <-
+    #   x2 %>%
+    #   dplyr::mutate(pred = tidyr::replace_na(pred, base::mean(train_df$y, na.rm = TRUE)))
+
 
   if (verbose) cat("Replacing NA with mean of y (the output variable).\n")
   x_joined2 <-

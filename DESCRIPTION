@@ -1,14 +1,20 @@
 Package: teachertools
 Type: Package
-Title: Provides tools for grading, examing and publication 
+Title: Provides Tools For Teachers Such As Grading, Examing and Publication 
 Version: 0.1.0.9000
-Author: Sebastian Sauer
-Maintainer: Sebastian Sauer <sebastiansauer1@gmail.com>
-Description: Tools for a) grading students such as mapping percentage points 
-    in some tests to a grade, b) building exams as an extension 
-    to to the r-exams package, c) publishing materials by e.g., building exercise o
-    literature sections
-License: MIT
+Authors@R: 
+    person("Sebastian", "Sauer", , "sebastiansauer1@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0003-1515-8348"))
+Description: Tools for (a) grading students such as mapping percentage points 
+    in some tests to a grade, (b) building exams as an extension 
+    to to the r-exams package, (c) publishing materials by e.g., building exercise.
 Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
 LazyData: true
 RoxygenNote: 7.2.1
+Suggests: 
+    knitr,
+    rmarkdown,
+    utils
+VignetteBuilder: knitr
+License: MIT + file LICENSE

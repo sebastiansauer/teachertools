@@ -1,0 +1,163 @@
+---
+title: "prediction-contest"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{prediction-contest}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Setup
+
+```{r setup}
+library(teachertools)
+library(tidyverse)  # data wrangling
+```
+
+
+# Specify Submission Data
+
+
+In this example, we will make use of some demo data within this package.
+
+
+
+```{r}
+submission_folder_path <- system.file("extdata", package = "teachertools")
+
+submission_files_path <- list.files(submission_folder_path, full.names = TRUE)
+
+submission_files_path
+```
+
+
+
+Let's check the content of one of those files:
+
+```{r}
+one_submission <-
+  read_csv(submission_files_path[1])
+
+glimpse(one_submission)
+```
+
+
+In a normal case, you would provide a vector to your submission files, e.g., like this:
+
+```{r eval= FALSE}
+submission_files_path <- list.files(path = path_to_csv_submissions,
+                                    full.names = TRUE,
+                                    pattern = ".csv$|.CSV$|.Csv$|.CSv$|.csV$|.cSV$|.cSV$",
+                                    recursive = TRUE) 
+```
+
+# Specify Train and Test Data
+
+
+```{r}
+d_train_path <- "https://raw.githubusercontent.com/sebastiansauer/pradadata/master/data-raw/ames_de_train.csv"
+d_test_path <- "https://raw.githubusercontent.com/sebastiansauer/pradadata/master/data-raw/ames_de_test.csv"
+```
+
+Note that `file.exists()` is unable to check the existence of a remote file.
+However, you may check by hand or use e.g, [this approach](https://stackoverflow.com/questions/30236518/check-the-existence-of-remote-directory-with-r).
+
+
+
+# Compute Prediction Error per Submission
+
+
+```{r}
+d_error <- comp_error_submissions(path_to_submissions = submission_folder_path,
+                                  name_output_var = "preis",
+                                  path_to_test_data = d_test_path,
+                                  path_to_train_data = d_train_path,
+                                  error_fun = yardstick::mae,
+                                  verbose = TRUE,
+                                  start_id = 801)
+```
+
+
+Let's have a look:
+
+```{r}
+d_error %>% attributes()
+glimpse(d_error)
+```
+
+
+Note that `id` refers to the student id, not the prediction id.
+
+
+
+# Closer Look to the submissions
+
+
+At times, student to not submit the correct column names, so 
+that automatic parsing faces difficulties:
+
+```{r}
+d_error$colnames_pred_file
+```
+
+
+At times, students to not submit the correct number of predictions:
+
+
+```{r}
+d_error$npreds
+```
+
+
+
+# Grade the students
+
+Importantly, we need thresholds defining the minimal performance for a given grade:
+
+```{r}
+grade_thresholds <-
+  tibble::tribble(
+    ~threshold, ~grade,
+             0,    0.7,
+        14250L,      1,
+        15000L,    1.3,
+        16000L,    1.7,
+        17000L,      2,
+        18100L,    2.3,
+        18500L,    2.7,
+        19000L,      3,
+        20000L,    3.3,
+        21000L,    3.7,
+        22000L,      4,
+        Inf,         5
+  )
+```
+
+
+
+```{r finalize-grades}
+d_grades <- finalize_grades(d_error = d_error,
+                            thresholds = grade_thresholds$threshold)
+```
+
+
+```{r gt-dgrades}
+gt::gt(d_grades)
+```
+
+
+
+# Plot distribution
+
+
+```{r plot-grade-distro, out.width="50%", fig.align="center"}
+plot_grade_distribution(d_grades)
+```
+

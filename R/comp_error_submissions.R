@@ -24,7 +24,7 @@
 #' @examples
 #' \dontrun{comp_error_submissions(mypath)}
 comp_error_submissions <- function(path_to_submissions = "Submissions/",
-                                   verbose = TRUE,
+                                   verbose = FALSE,
                                    path_to_train_data,
                                    path_to_test_data,
                                    max_row = NULL,
@@ -32,11 +32,11 @@ comp_error_submissions <- function(path_to_submissions = "Submissions/",
                                    name_output_var = "y",
                                    name_id_var = "id",
                                    name_pred_column = "pred",
-                                   error_fun = mae) {
+                                   error_fun = yardstick::mae) {
 
 
 
-  if (verbose) cat("This is function `comp_error_submissions` speaking.\n")
+  if (verbose) cat("This is function `comp_error_submissions()` speaking.\n")
 
   # Parse submissions:
   submissions <- list.files(path = path_to_submissions,
@@ -49,7 +49,8 @@ comp_error_submissions <- function(path_to_submissions = "Submissions/",
   if (verbose) cat(paste0("Number of CSV files to be processed: ", length(submissions), "\n"))
 
   # Make sure the paths are ending with a slash:
-  if (!str_detect(path_to_submissions, "/$")) path_to_submissions <- str_c(path_to_submissions, "/")
+  if (!stringr::str_detect(path_to_submissions, "/$"))
+    path_to_submissions <- stringr::str_c(path_to_submissions, "/")
   if (verbose) cat(paste0("Path to submissions is: ", path_to_submissions, "\n"))
 
   stopifnot(start_id > 0)
@@ -57,14 +58,14 @@ comp_error_submissions <- function(path_to_submissions = "Submissions/",
 
 
 
-  # parse names and Matrikelnummer to df:
+  # parse names and Matrikelnummers to df:
   d <-
-    tibble::tibble(id = 1:length(submissions)) %>%
+    tibble::tibble(id_seq = 1:length(submissions)) %>%
     dplyr::mutate(csv_file_name = stringr::str_conv(submissions, "utf8")) %>%
     dplyr::mutate(csv_file_name = berryFunctions::convertUmlaut(csv_file_name)) %>%
     dplyr::mutate(last_name = parse_last_names(csv_file_name),
            first_name = parse_first_names(csv_file_name)) %>%
-    dplyr::mutate(matrikelnummer = parse_matrikelnummer(csv_file_name))
+    dplyr::mutate(id = parse_matrikelnummer(csv_file_name))
 
 
   # add nrow of preds to df:
@@ -89,6 +90,7 @@ comp_error_submissions <- function(path_to_submissions = "Submissions/",
 
   #debug(prep_csv)
   # parse prediction data to df:
+  # CALL PREP_CSV:
   if (verbose) print("Now starting to parse csv files with prediction data.")
   d3 <-
     d2a %>%
@@ -108,6 +110,8 @@ comp_error_submissions <- function(path_to_submissions = "Submissions/",
 
   if (verbose) print("Parsing of prediction data (submissions) completed.")
 
+
+  # compute predictive quality/prediction error:
   if (verbose) print("Now computing test set error for each submission.")
   d4 <-
     d3 %>%
@@ -116,7 +120,6 @@ comp_error_submissions <- function(path_to_submissions = "Submissions/",
                                                      estimate = pred,
                                                      data = .x)))
   # set `error_fun <- mae` during debugging!
-
   options(scipen = 4)
   d5 <-
     d4 %>%
@@ -125,5 +128,17 @@ comp_error_submissions <- function(path_to_submissions = "Submissions/",
 
   if (verbose) print("Computing test set error for each submission is now completed.")
 
+
+  # add comments from metadata as own columns:
+  # d5 <-
+  #   d5 %>%
+  #   mutate(comments =  attr(x_joined2, "comments_to_student"),
+  #          fail =  attr(x_joined2, "failed"),
+  #          attr(x_joined2, "na_prop"))
+
+
+  if (verbose) cat("Finished `comp_error_submissions`.\n")
   return(d5)
+
+
 }

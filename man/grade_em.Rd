@@ -4,20 +4,27 @@
 \alias{grade_em}
 \title{Grade em}
 \usage{
-grade_em(x, breaks12, reverse = FALSE)
+grade_em(x, thresholds, reverse = FALSE, grades_scheme = NULL, verbose = FALSE)
 }
 \arguments{
-\item{x}{student's percentage points (one row per student)}
+\item{x}{student's prediction error value, such as MAE or RMSE (numeric)}
 
 \item{reverse}{reverse grading scheme (lgl)?}
 
-\item{breaks}{thresholds for a given grade (vector of length 12)}
+\item{grades_scheme}{Grades scheme, eg., from 5.0 to 1.0}
+
+\item{breaks}{thresholds for a given grade (numeric vector of length 12)}
 }
 \value{
 grades per student
 }
 \description{
 This function assigns grades
+}
+\details{
+If no grade scheme is given, the function uses it own grade scheme,
+which is printed when the argument \code{verbose} is \code{TRUE}.
+The number of thresholds ("fence posts") must be equal the number of grades ("fence ways") plus 1.
 }
 \examples{
 \dontrun{grade_em(thresholds, values)}

@@ -4,10 +4,10 @@
 \alias{plot_notenspiegel}
 \title{Plot Notenspiegel}
 \usage{
-plot_notenspiegel(data, plot_title = "Notenverteilung")
+plot_notenspiegel(d, plot_title = "Notenverteilung")
 }
 \arguments{
-\item{data}{containing grades}
+\item{d}{data frame containing grades}
 
 \item{plot_title}{Title to be assigned to the plot}
 }
@@ -15,7 +15,7 @@ plot_notenspiegel(data, plot_title = "Notenverteilung")
 ggplot2 object
 }
 \description{
-Plot Grade Distribution (Notenspiegel)
+Plot Grade Distribution (Notenspiegel).
 }
 \details{
 Plot distribution of grades, a simple wrapper around ggplot2

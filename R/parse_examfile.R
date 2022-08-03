@@ -54,7 +54,7 @@ parse_examfile <- function(examfile) {
     ex_str[start_pos:length(ex_str)] %>%
     magrittr::extract(-c(1,2))
 
-  title <- str_extract(examfile, "([^/]+$)") %>%
+  title <- stringr::str_extract(examfile, "([^/]+$)") %>%
     stringr::str_remove("\\.Rmd")
 
   # remove backticks from metadata, as it cannot be parsed:

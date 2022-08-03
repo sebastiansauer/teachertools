@@ -22,9 +22,9 @@ prep_csv(
 
 \item{path_to_submissions}{path to submission folder with submission files (chr)}
 
-\item{path_to_train_data}{path to train data, regular csv file expected (chr)}
+\item{path_to_train_data}{path to train data file, regular csv file expected (chr)}
 
-\item{path_to_test_data}{path to test data, regular csv file expected  (Chr)}
+\item{path_to_test_data}{path to test data file, regular csv file expected  (Chr)}
 
 \item{max_row}{how many rows should be prepared maximally (int)?}
 
@@ -50,8 +50,9 @@ and irons out some glitches so that the prediction error can be computed
 in a subsequent step (not part of this function).
 Each single submissions consists of a number of submissions.
 The submssions are expected to be a data frame with two columns:
-1) id: the unique id of each prediction (integer, positive)
-2) pred: the predicted value for each instance
+\enumerate{
+\item id: the unique id of each prediction (integer, positive)
+\item pred: the predicted value for each instance
 Note that the id must be shared knowledge,
 i.e., the student must submit an id that is used by the teacher,
 otherwise the predictions cannot be matched.
@@ -63,10 +64,11 @@ added in this case.
 The output variable will be renamed to "y", in order to simplify the downstream work.
 Any missing values in the submission will be filled with the (arithmetic) mean.
 The submission does not necessarily be of a standard csv format, as
-`data.table::fread` is able to guess formats. However, for the train and test data file, a standard csv file is expected (comma as deliminators, US centric locale).
+\code{data.table::fread} is able to guess formats. However, for the train and test data file, a standard csv file is expected (comma as deliminators, US centric locale).
+}
 
 The function returns a data frame with the the columns mentioned above (id, pred).
-The returned dataframes contains to attributres, "comments_to_student", where hints about gross errors are mentioned, and "fail" to indicate pass/fail of the test, here if gross errors (eg., no data submitted) are present.
+The returned dataframes contains some attributes: (1) "comments_to_student", where hints about gross errors are mentioned, (2) "fail" to indicate pass/fail of the test, here if gross errors (eg., no data submitted) are present, (3), "na_prop": the proportion of na in the prediction column.
 }
 \examples{
 \dontrun{prep_csv(my_submission_file, path_train, path_test, max_row = 500, start_id = 800)}

@@ -139,18 +139,18 @@ grade_em_all <- function(data_path_moodle_csv, grading_scheme = NULL, verbose = 
 
   d7 <-
     d6c %>%
-    mutate(grades =
-             case_when(bewertung >= grading_scheme[10] ~ 1,
-                       bewertung >= grading_scheme[9] ~ 1.3,
-                       bewertung >= grading_scheme[8] ~ 1.7,
-                       bewertung >= grading_scheme[7] ~ 2.0,
-                       bewertung >= grading_scheme[6] ~ 2.3,
-                       bewertung >= grading_scheme[5] ~ 2.7,
-                       bewertung >= grading_scheme[4] ~ 3.0,
-                       bewertung >= grading_scheme[3] ~ 3.3,
-                       bewertung >= grading_scheme[2] ~ 3.7,
-                       bewertung >= grading_scheme[1] ~ 4.0,
-                       bewertung < grading_scheme[1] ~ 5))
+    dplyr::mutate(grades =
+                    dplyr::case_when(bewertung >= grading_scheme[10] ~ 1,
+                                     bewertung >= grading_scheme[9] ~ 1.3,
+                                     bewertung >= grading_scheme[8] ~ 1.7,
+                                     bewertung >= grading_scheme[7] ~ 2.0,
+                                     bewertung >= grading_scheme[6] ~ 2.3,
+                                     bewertung >= grading_scheme[5] ~ 2.7,
+                                     bewertung >= grading_scheme[4] ~ 3.0,
+                                     bewertung >= grading_scheme[3] ~ 3.3,
+                                     bewertung >= grading_scheme[2] ~ 3.7,
+                                     bewertung >= grading_scheme[1] ~ 4.0,
+                                     bewertung < grading_scheme[1] ~ 5))
 
 
   if (verbose) cat("case_when grading used")
@@ -166,12 +166,12 @@ grade_em_all <- function(data_path_moodle_csv, grading_scheme = NULL, verbose = 
 
   d9 <-
     d8 %>%
-    mutate(pass = ifelse(grades <= 4, TRUE, FALSE)) %>%
-    mutate(comments = comments)
+    dplyr::mutate(pass =  dplyr::ifelse(grades <= 4, TRUE, FALSE)) %>%
+    dplyr::mutate(comments = comments)
 
   out <-
     d9 %>%
-    select(nachname, vorname, e_mail_adresse, bewertung,
+    dplyr::select(nachname, vorname, e_mail_adresse, bewertung,
            n_correct, grades, pass, comments)
 
   return(out)

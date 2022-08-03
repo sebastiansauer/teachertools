@@ -29,10 +29,10 @@ write_yamlrmdfile <- function(ex_parsed,
                               header_level = 1){
 
   # determine the number of hashed to indicate header level:
-  header_level_hashes <- rep("#", header_level) %>% str_c(collapse = "")
+  header_level_hashes <- rep("#", header_level) %>% stringr::str_c(collapse = "")
 
   # more yaml to be added`?
-  ex_parsed$ex_metadata <- str_c(ex_parsed$ex_metadata, more_yaml, collapse = "\n")
+  ex_parsed$ex_metadata <- stringr::str_c(ex_parsed$ex_metadata, more_yaml, collapse = "\n")
 
 
   # now build the yaml-rmd file:
@@ -42,19 +42,20 @@ write_yamlrmdfile <- function(ex_parsed,
       # pre-question:
       ex_parsed$ex_pre_question, "",
       # header for "Exercise":
-      str_c(c(header_level_hashes, " ", ex_sol_str[1]), collapse = ""), "",
+      stringr::str_c(c(header_level_hashes, " ", ex_sol_str[1]), collapse = ""), "",
       # exercise:
       ex_parsed$ex_question, "",
       # separation between exercise and solution:
       separate_ex_sol, "",
       # solution:
-      str_c(c(header_level_hashes, " ", ex_sol_str[2]), collapse = ""), "",
+      stringr::str_c(c(header_level_hashes, " ", ex_sol_str[2]), collapse = ""), "",
       ex_parsed$ex_solution, "")
 
   # add "categories" if desired:
   if (print_categories) {
     yamlrmdfile <-
-      c(yamlrmdfile,"", "---", "", paste0(ex_sol_str[3], ": "), "", as.yaml(ex_parsed$ex_metadata_yaml$categories))
+      c(yamlrmdfile,"", "---", "", paste0(ex_sol_str[3], ": "), "",
+        yaml::as.yaml(ex_parsed$ex_metadata_yaml$categories))
   }
 
   # build path:
