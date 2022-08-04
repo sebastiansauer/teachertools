@@ -24,7 +24,7 @@ finalize_grades(
 
 \item{verbose}{more output? (lgl)}
 
-\item{...}{}
+\item{...}{more options eg., for grade_em which is called internally}
 }
 \value{
 df with grdades (notenliste)

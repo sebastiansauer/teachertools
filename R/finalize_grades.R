@@ -8,7 +8,7 @@
 #' @param grades_particulars individual changes to the grades (df)
 #' @param save_to_disk save as `d_grades.csv` and `d_grades.rds`, if TRUE (lgl)
 #' @param verbose more output? (lgl)
-#' @param ...
+#' @param ... more options eg., for grade_em which is called internally
 #'
 #' @return df with grdades (notenliste)
 #' @export
@@ -28,24 +28,24 @@ finalize_grades <- function(d_error,
   if (verbose) cat("Add metadata (attributes) as columns.\n")
   d_error2 <-
     d_error %>%
-    mutate(comments_to_student = map_chr(data, ~ attr(., which = "comments_to_student"))) %>%
-    mutate(failed = map_lgl(data, ~ attr(., which = "failed"))) %>%
-    mutate(na_prop = map_dbl(data, ~ attr(., which = "na_prop"))) %>%
-    select(id, last_name, first_name, npreds, error_value, comments_to_student, failed, na_prop)
+    dplyr::mutate(comments_to_student = purrr::map_chr(data, ~ attr(., which = "comments_to_student"))) %>%
+    dplyr::mutate(failed = purrr::map_lgl(data, ~ attr(., which = "failed"))) %>%
+    dplyr::mutate(na_prop = purrr::map_dbl(data, ~ attr(., which = "na_prop"))) %>%
+    dplyr::select(id, last_name, first_name, npreds, error_value, comments_to_student, failed, na_prop)
 
   # Grade the students:
   if (verbose) cat("Grade em.\n")
   d_grades <-
     d_error2 %>%
-    mutate(grade_f = grade_em(x = error_value,
+    dplyr::mutate(grade_f = grade_em(x = error_value,
                               thresholds = thresholds,
                               reverse = TRUE)) %>%
-    mutate(grade = as.numeric(as.character(grade_f)))
+    dplyr::mutate(grade = as.numeric(as.character(grade_f)))
 
 
   if (is.null(grades_particulars)) {
     grades_particulars <-
-      tribble(
+      tibble::tribble(
         ~id, ~grade_change, ~comment,
         "", 0, ""
       )
@@ -58,19 +58,18 @@ finalize_grades <- function(d_error,
     d_grades %>%
     left_join(grades_particulars) %>%
     rename(grade_old = grade) %>%
-    mutate(grade_change = replace_na(grade_change, 0)) %>%
-    mutate(grade = grade_old + grade_change) %>%
-    mutate(grade_f = as.factor(grade)) %>%
-    mutate(comment = map2_chr(comments_to_student, comment, str_c, sep = " | ")) %>%
-    mutate(comment2 = paste0("Error value in test sample: ", round(error_value, 3))) %>%
-    mutate(comment = map2_chr(comment, comment2, str_c, sep = " | ")) %>%
-    select(-c(comments_to_student, comment2))
+    dplyr::mutate(grade_change = tidyr::replace_na(grade_change, 0)) %>%
+    dplyr::mutate(grade = grade_old + grade_change) %>%
+    dplyr::mutate(grade_f = as.factor(grade)) %>%
+    dplyr::mutate(comment = paste0("Error value in test sample: ", round(error_value, 3), ". ")) %>%
+    dplyr::mutate(comment = purrr::map2_chr(comment, comments_to_student, paste0)) %>%
+    dplyr::select(-c(comments_to_student))
 
 
   # Save to disk:
   if (save_to_disk) {
-    write_csv(d_grades2, file = paste0(results_path, "d_grades.rds"))
-    write_rds(d_grades2, file = paste0(results_path, "d_grades.rds"))
+    readr::write_csv(d_grades2, file = paste0(results_path, "d_grades.rds"))
+    readr::write_rds(d_grades2, file = paste0(results_path, "d_grades.rds"))
   }
 
   return(d_grades2)

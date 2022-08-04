@@ -60,7 +60,8 @@ prep_csv <- function(submission_file,
   if (verbose) cat("This is function `prep_csv` speaking.\n")
 
   # Make sure the paths are ending with a slash:
-  if (!stringr::str_detect(path_to_submissions, "/$")) path_to_submissions <- stringr::str_c(path_to_submissions, "/")
+  if (!stringr::str_detect(path_to_submissions, "/$"))
+    path_to_submissions <- stringr::str_c(path_to_submissions, "/")
   if (verbose) cat(paste0("Path to submissions is: ", path_to_submissions, "\n"))
 
   stopifnot(start_id > 0)
@@ -90,6 +91,7 @@ prep_csv <- function(submission_file,
   if (verbose) print(paste0("*****Now processing: ", submission_file, "*****"))
 
   x <- data.table::fread(paste0(path_to_submissions, submission_file), header = TRUE)
+
   stopifnot(any(class(x) == "data.frame"))
   if (verbose){
     cat(paste0("Dimension of submissions file: ", str_c(dim(x), collapse = "; ")))

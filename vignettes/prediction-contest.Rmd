@@ -1,6 +1,10 @@
 ---
 title: "prediction-contest"
-output: rmarkdown::html_vignette
+subittle: Vignette
+output: 
+  rmarkdown::html_vignette:
+    toc: TRUE
+    number_sections: TRUE
 vignette: >
   %\VignetteIndexEntry{prediction-contest}
   %\VignetteEngine{knitr::rmarkdown}
@@ -21,8 +25,9 @@ library(teachertools)
 library(tidyverse)  # data wrangling
 ```
 
+# Set constants
 
-# Specify Submission Data
+## Specify Submission Data
 
 
 In this example, we will make use of some demo data within this package.
@@ -58,7 +63,7 @@ submission_files_path <- list.files(path = path_to_csv_submissions,
                                     recursive = TRUE) 
 ```
 
-# Specify Train and Test Data
+## Specify Train and Test Data
 
 
 ```{r}
@@ -75,13 +80,14 @@ However, you may check by hand or use e.g, [this approach](https://stackoverflow
 
 
 ```{r}
-d_error <- comp_error_submissions(path_to_submissions = submission_folder_path,
-                                  name_output_var = "preis",
-                                  path_to_test_data = d_test_path,
-                                  path_to_train_data = d_train_path,
-                                  error_fun = yardstick::mae,
-                                  verbose = TRUE,
-                                  start_id = 801)
+d_error <- comp_error_submissions(
+  path_to_submissions = submission_folder_path,
+  name_output_var = "preis",
+  path_to_test_data = d_test_path,
+  path_to_train_data = d_train_path,
+  error_fun = yardstick::mae,
+  verbose = TRUE,
+  start_id = 801)
 ```
 
 
@@ -138,7 +144,13 @@ grade_thresholds <-
         22000L,      4,
         Inf,         5
   )
+
+grade_thresholds %>% 
+  gt::gt()
 ```
+
+
+Your students will be quite interested in this table :-)
 
 
 
@@ -159,5 +171,137 @@ gt::gt(d_grades)
 
 ```{r plot-grade-distro, out.width="50%", fig.align="center"}
 plot_grade_distribution(d_grades)
+```
+
+
+
+# Prepare the CSV file
+
+You normally need not call this function,
+its job is to prepare the CSV file for computing the individual prediction errors.
+This is neccessary as some CSV files contain glitches such as different delimiters,
+or too many/few columns with strange names etc, all things that need consideration.
+`prep_csv` tries to take care of those details.
+
+
+The parameters are mostly identical to `compute_error_submissions`:
+
+```{r}
+data.table::fread(submission_files_path[1])
+```
+
+
+
+```{r}
+d_prepred_csv <- 
+  prep_csv(
+    submission_file = "Lastname7_Firstname7_72345678_Prognose.csv",
+    path_to_submissions = submission_folder_path,
+    name_output_var = "preis",
+    path_to_test_data = d_test_path,
+    path_to_train_data = d_train_path,
+    verbose = TRUE,
+    start_id = 801
+)
+```
+
+
+```{r}
+d_prepred_csv %>% 
+  head() %>% 
+  gt::gt()
+```
+
+
+
+
+# Deal with missing students
+
+Sometimes there are student submissions for which you, as the teacher, will not find a grade,
+after running these `teachertools`. 
+Let's call those cases "submitted-not-graded".
+Similarly, in some cases, there will be students for which you have a grade,
+but the students failed to properly enroll to the exam.
+Let's call those cases "submitted-not-enrolled".
+Finally, often times, some students do enroll, but for some reason,
+fail to submit their exam.
+Let's call those cases "enrolled-not-submitted".
+It makes sense to check for all three cases,
+in order to be sure that your grading procedure is not to blame for any of 
+the three above mentioned inconsistencies.
+Let's look at each of the three inconsistencies in turn.
+
+
+## Submitted-not-graded
+
+
+Get a list of all submitted exam files (here without path):
+
+```{r}
+submission_files_wo_path <- list.files(submission_folder_path, 
+                                       full.names = FALSE)
+submission_files_wo_path
+```
+
+Strip the student id (assumed to be more reliabel compared to the name).
+Some Regex is of help, in the case of the example file names above,
+the ID number can be stripped like this:
+
+
+```{r}
+subm_ids <-
+  submission_files_wo_path %>% 
+  map_chr(parse_matrikelnummer) 
+
+subm_ids
+```
+
+
+Now we can compare the two sets of submitted (`subm_ids`) and processed with a grade (`d_grade$id`):
+
+```{r}
+setdiff(subm_ids, d_grades$id)
+```
+
+
+Remember:
+
+```{r}
+x <- c(1, 2, 3)
+y <- c(1)
+
+setdiff(x, y)
+```
+
+
+In other words, `setdiff()` checks *which elements from `x` are not in `y`*.
+
+In our case, we check which elements of the submitted exams `subm_id` are not part of the graded ones `d_grades`.
+
+
+## Submitted-not-enrolled
+
+Get a list of the students who formally enrolled to your course.
+
+Let's assume this is the list:
+
+```{r}
+enrolled_students <- c("22345678", "32345678", "42345678", "52345678", "62345678", "72345678", "82345678")
+```
+
+Again, we can compare the two relevant sets: Which elements from the set of enrolled students is not part of the set of grades students?
+
+```{r}
+setdiff(enrolled_students, d_grades$id)
+```
+
+
+## Enrolled-not-submitted
+
+Vice versa, let's check which students ("elements") submitted their exam but are not formally enrolled to the exam?
+
+
+```{r}
+setdiff(d_grades$id, enrolled_students)
 ```
 

@@ -90,7 +90,7 @@ parse_matrikelnummer <- function(submission, n_digits = 8) {
 
   matrikelnummer <-
     stringr::str_to_lower(submission) %>%
-    stringr::str_extract("_\\d+_") %>%
+    stringr::str_extract("_\\d+_?") %>%
     stringr::str_remove_all("_") %>%
     stringr::str_pad(width = n_digits, pad = "0", side = "left")
 

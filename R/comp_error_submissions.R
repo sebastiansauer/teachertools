@@ -129,14 +129,6 @@ comp_error_submissions <- function(path_to_submissions = "Submissions/",
   if (verbose) print("Computing test set error for each submission is now completed.")
 
 
-  # add comments from metadata as own columns:
-  # d5 <-
-  #   d5 %>%
-  #   mutate(comments =  attr(x_joined2, "comments_to_student"),
-  #          fail =  attr(x_joined2, "failed"),
-  #          attr(x_joined2, "na_prop"))
-
-
   if (verbose) cat("Finished `comp_error_submissions`.\n")
   return(d5)
 
