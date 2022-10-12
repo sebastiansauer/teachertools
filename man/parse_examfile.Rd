@@ -7,7 +7,7 @@
 parse_examfile(examfile)
 }
 \arguments{
-\item{examfile}{path to r-exam exercise file}
+\item{examfile}{path to r-exam exercise file. Can be remote or local.}
 }
 \value{
 list with the parts of the exercise file

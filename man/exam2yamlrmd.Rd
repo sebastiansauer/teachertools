@@ -10,14 +10,15 @@ exam2yamlrmd(
   ex_sol_str = c("Exercise", "Solution", "Categories"),
   print_categories = FALSE,
   separate_ex_sol = rep("</br>", 10),
+  more_yaml = NULL,
   verbose = TRUE,
   header_level = 1
 )
 }
 \arguments{
-\item{examfile}{input file in r-exam format}
+\item{examfile}{path to input file in r-exam format (string)}
 
-\item{path_output}{output puath}
+\item{path_output}{output path (string)}
 
 \item{ex_sol_str}{wording for the parts of the exercise (useful for translation purposes)}
 
@@ -25,11 +26,11 @@ exam2yamlrmd(
 
 \item{separate_ex_sol}{How should the question and solution be visually separated?}
 
+\item{more_yaml}{more yaml to add which was not given in the r-exam file}
+
 \item{verbose}{talkative, yes or no? (TRUE or FALSE)}
 
 \item{header_level}{how many '#' should be padded in order to indicate the header leve?}
-
-\item{more_yaml}{more yaml to add which was not given in the r-exam file}
 }
 \value{
 writes an rmd file
@@ -38,7 +39,7 @@ writes an rmd file
 Converts r-exam File to yaml-headed RMD file
 }
 \details{
-This function calls parse_examfile() and then write_yamlrmdfile().
+This function calls parse_examfile() using \code{examfile} as input and based on the output it calls then write_yamlrmdfile().
 }
 \examples{
 \dontrun{exam2yamlrmd(ex_parsed, my_path)}

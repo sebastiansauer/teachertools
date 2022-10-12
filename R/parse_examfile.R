@@ -6,7 +6,7 @@
 #' 3. question, 4. solution. The metadata will be converted to regular yaml.
 #'
 #'
-#' @param examfile path to r-exam exercise file
+#' @param examfile path to r-exam exercise file. Can be remote or local.
 #'
 #' @return list with the parts of the exercise file
 #' @export
@@ -18,8 +18,9 @@
 parse_examfile <- function(examfile) {
 
 
-  stopifnot(file.exists(examfile))
-  ex_str <- readLines(examfile)
+  #stopifnot(file.exists(examfile))
+  #ex_str <- readLines(examfile)
+  ex_str <- readr::read_lines(examfile)
 
 
   # get pre-question:
@@ -69,7 +70,7 @@ parse_examfile <- function(examfile) {
   if (length(ex_metadata_yaml$tags) == 1) ex_metadata_yaml$tags <-
     c(ex_metadata_yaml$tags, "stats")
   if (length(ex_metadata_yaml$categories) == 1) ex_metadata_yaml$categories <-
-    c(ex_metadata_yaml$categories, Sys.Date() %>% lubridate::year())
+    c(ex_metadata_yaml$categories, format(as.Date(Sys.Date(), format="%d/%m/%Y"),"%Y"))
 
 
   examfile_info <-

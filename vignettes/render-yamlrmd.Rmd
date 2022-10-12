@@ -1,0 +1,132 @@
+---
+title: "Rendering yamlrmd files"
+subittle: Vignette
+output: 
+  rmarkdown::html_vignette:
+    toc: TRUE
+    number_sections: TRUE
+vignette: >
+  %\VignetteIndexEntry{rendering-yamlrmd}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Setup
+
+```{r setup}
+library(teachertools)
+library(tidyverse)  # data wrangling
+```
+
+
+# Get example r/exams exercise file
+
+```{r}
+exam_file_path <- "https://raw.githubusercontent.com/sebastiansauer/r-exams-demo/main/exs/swisscapital.Rmd"
+
+ex <- read_lines(exam_file_path)
+```
+
+
+You can have a glimpse into that file [here, in its repo on Github](https://github.com/sebastiansauer/r-exams-demo/blob/main/exs/swisscapital.Rmd).
+
+First few lines:
+
+```{r}
+head(ex, 10)
+```
+
+
+# First step: Parse the file
+
+
+```{r}
+ex_parsed <- parse_examfile(exam_file_path)
+```
+
+
+Let's have a look:
+
+```{r}
+ex_parsed
+```
+
+
+# Second step: Write as Yaml Rmd file
+
+
+
+```{r}
+out1 <- write_yamlrmdfile(ex_parsed = ex_parsed, path_output = "~/tmp")
+```
+
+I have chosen the folder `tmp` on my root level. Feel free to adapt to your hard disk.
+
+Let's have a look at this file:
+
+```{r}
+rendered_yamlrmd_path <- "~/tmp/swisscapital/swisscapital.Rmd"
+rendered_yamlrmd <- read_lines(rendered_yamlrmd_path)
+
+head(rendered_yamlrmd)
+```
+
+Ok, let's have a look at the whole file:
+
+```{r}
+print(rendered_yamlrmd)
+```
+
+
+The function returns the string which is written as the output file:
+```{r}
+head(out1)
+out1
+```
+
+
+
+# Both steps in one go
+
+
+```{r}
+out2 <- exam2yamlrmd(examfile = exam_file_path,
+                    path_output = "~/tmp")
+```
+
+
+```{r}
+out2
+```
+
+
+
+# Alternative way
+
+There's one more convenience function, similar to `exam2yamlrmd` but it allows to render multiple outputformats in one go.
+
+Here, the exam file should be available on the local disk.
+
+```{r}
+ex_file <- "swisscapital.Rmd"
+```
+
+
+
+```{r}
+#undebug(render_exs)
+render_exs(exs = ex_file,
+           render_html = TRUE,
+           render_yamlrmd = TRUE,
+           render_pdf_print = FALSE,
+           my_edir = "/Users/sebastiansaueruser/Rlibs/teachertools/extdata",
+           output_path = "~/tmp")
+```
+

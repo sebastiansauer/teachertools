@@ -2,10 +2,10 @@
 #'
 #' Converts r-exam File to yaml-headed RMD file
 #'
-#' This function calls parse_examfile() and then write_yamlrmdfile().
+#' This function calls parse_examfile() using `examfile` as input and based on the output it calls then write_yamlrmdfile().
 #'
-#' @param examfile input file in r-exam format
-#' @param path_output output puath
+#' @param examfile path to input file in r-exam format (string)
+#' @param path_output output path (string)
 #' @param ex_sol_str wording for the parts of the exercise (useful for translation purposes)
 #'
 #' @param print_categories should the yaml field 'categories' be printed?
@@ -25,22 +25,26 @@ exam2yamlrmd <- function(examfile,
                          ex_sol_str = c("Exercise", "Solution", "Categories"),
                          print_categories = FALSE,
                          separate_ex_sol = rep("</br>", 10),
+                         more_yaml = NULL,
                          verbose = TRUE,
                          header_level = 1){
   # This function reads a R/exams exercise file and converts it to a yaml-headed Rmd file.
 
-
+  # step 1: parse the exam file
   ex_parsed <- parse_examfile(examfile = examfile)
 
 
-
-  write_yamlrmdfile(ex_parsed,
+  # step 2: write the rendered file to disk:
+  out <- write_yamlrmdfile(ex_parsed,
                     path_output,
                     ex_sol_str,
+                    more_yaml = more_yaml,
                     print_categories,
                     separate_ex_sol,
                     verbose = verbose,
                     header_level)
+
+  return(out)
 }
 
 
