@@ -36,11 +36,11 @@ render_exs(
 
 \item{use_seed}{(TRUE) Should the random seed for the exercises (if used) be stored for reproducibility?}
 
-\item{n_students}{(1) How many variants should be divised in case of dynamic exercises?}
+\item{n_students}{(1) How many variants should be divised in case of dynamic exercises? (integer)}
 
 \item{output_name}{(NULL, optional) an optional output name of the resulting file}
 
-\item{prime_factor}{(1) use different primes for the seeds}
+\item{prime_factor}{(1) use different primes for the seeds (integer)}
 
 \item{my_edir}{path where the exercise file can be found (string)}
 

@@ -8,7 +8,7 @@
 #' The number of thresholds ("fence posts") must be equal the number of grades ("fence ways") plus 1.
 #'
 #' @param x student's prediction error value, such as MAE or RMSE (numeric)
-#' @param breaks thresholds for a given grade (numeric vector of length 12)
+#' @param thresholds thresholds for a given grade (numeric vector of length 12)
 #' @param reverse reverse grading scheme (lgl)?
 #' @param grades_scheme Grades scheme, eg., from 5.0 to 1.0
 #'

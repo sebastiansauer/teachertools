@@ -7,7 +7,7 @@
 write_yamlrmdfile(
   ex_parsed,
   path_output,
-  ex_sol_str = c("Exercise", "Solution", "Categories"),
+  ex_sol_str = c("Aufgabe", "Lösung", "Kategorien"),
   print_categories = TRUE,
   separate_ex_sol = rep("</br>", 10),
   verbose = TRUE,

@@ -4,10 +4,12 @@
 \alias{parse_examfile}
 \title{parse_examfile}
 \usage{
-parse_examfile(examfile)
+parse_examfile(examfile, verbose = FALSE)
 }
 \arguments{
 \item{examfile}{path to r-exam exercise file. Can be remote or local.}
+
+\item{verbose}{Print additional information?}
 }
 \value{
 list with the parts of the exercise file
@@ -21,5 +23,9 @@ Parses the follwing parts of an r-exam file: 1. metadata, 2. pre-question part,
 }
 \examples{
 \dontrun{parse_examfile(myexamfile)}
+library(teachertools)
+examfile_name <- "/Users/sebastiansaueruser/github-repos/rexams-exercises/exercises/sebastiansauer/de/Bayes/pigs2.Rmd"
 
+fileparsed <- parse_examfile(examfile_name)
+fileparsed
 }

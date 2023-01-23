@@ -9,11 +9,11 @@ grade_em(x, thresholds, reverse = FALSE, grades_scheme = NULL, verbose = FALSE)
 \arguments{
 \item{x}{student's prediction error value, such as MAE or RMSE (numeric)}
 
+\item{thresholds}{thresholds for a given grade (numeric vector of length 12)}
+
 \item{reverse}{reverse grading scheme (lgl)?}
 
 \item{grades_scheme}{Grades scheme, eg., from 5.0 to 1.0}
-
-\item{breaks}{thresholds for a given grade (numeric vector of length 12)}
 }
 \value{
 grades per student

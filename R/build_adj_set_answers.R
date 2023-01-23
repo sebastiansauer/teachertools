@@ -8,7 +8,7 @@
 #' @param dag_def dag defintion, based on R package dagitty (string)
 #' @param exposure_var which variable is the exposure (string)?
 #' @param outcome_var which var. is the outcome variable? (string)
-#' @return tibble wit 1 correct and 4 incorrect solutions
+#' @return tibble with 1 correct and 4 incorrect solutions
 #' @export
 #'
 #' @examples
@@ -23,7 +23,7 @@ build_adj_set_answers <- function(dag_def, exposure_var, outcome_var) {
 
 
   get_dag_size <- function(dag){
-    stringr::str_extract_all(dag, pattern = "\\d") %>% unlist() %>% max()
+    max(unlist(stringr::str_extract_all(dag, pattern = "\\d")))
   }
 
 
@@ -48,7 +48,7 @@ build_adj_set_answers <- function(dag_def, exposure_var, outcome_var) {
   no_solution <- "/"
   empty_set <- c("{ }")
   all_sets_size1 <- paste0("{ x", 1:dag_size, " }")
-  all_sets_size2 <- outer(variables, variables, FUN = str_c, sep = ", ")
+  all_sets_size2 <- outer(variables, variables, FUN = stringr::str_c, sep = ", ")
 
   all_sets_size2_unique <- all_sets_size2[upper.tri(all_sets_size2)]
 
@@ -61,15 +61,14 @@ build_adj_set_answers <- function(dag_def, exposure_var, outcome_var) {
 
 
   # find shortest adjustment set (random brake in case of ties):
-  shortest_adj_set_nr <- purrr::map_dbl(adj, length) %>% which.min() %>% unname()
+  shortest_adj_set_nr <- unname(which.min(purrr::map_dbl(adj, length)))
 
   # we continue with the shortest one:
   adj_shortest <- adj[shortest_adj_set_nr]
 
   # format adj to string:
-  adj_string <-
-    purrr::map_chr(adj, str_c, collapse= " , ") %>%
-    purrr::map_chr(~paste0("{ ",.x, " }"))
+  adj_string_first <- purrr::map_chr(adj, stringr::str_c, collapse= " , ")
+  adj_string <- purrr::map_chr(adj_string_first, ~paste0("{ ",.x, " }"))
 
   adj_string_shortest <-
     adj_string[shortest_adj_set_nr]
@@ -93,8 +92,8 @@ build_adj_set_answers <- function(dag_def, exposure_var, outcome_var) {
     tibble::tibble(
       sol = sol,
       is_correct = c(TRUE, F, F, F, F)
-    ) %>%
-    dplyr::sample_n(size = nrow(.))  # shuffle it, so that the correct solution comes to a random place
+    )
+  sol_df <- dplyr::sample_n(sol_df, size = nrow(sol_df))  # shuffle it, so that the correct solution comes to a random place
 }
 
 

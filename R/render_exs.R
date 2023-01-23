@@ -12,9 +12,9 @@
 #' @param output_path path where should the output file be saved (string)
 #' @param template the HTML template to use (path) (string)
 #' @param use_seed (TRUE) Should the random seed for the exercises (if used) be stored for reproducibility?
-#' @param n_students (1) How many variants should be divised in case of dynamic exercises?
+#' @param n_students (1) How many variants should be divised in case of dynamic exercises? (integer)
 #' @param output_name (NULL, optional) an optional output name of the resulting file
-#' @param prime_factor (1) use different primes for the seeds
+#' @param prime_factor (1) use different primes for the seeds (integer)
 #' @param my_edir path where the exercise file can be found (string)
 #' @param verbose (FALSE) print out details
 #'
@@ -64,7 +64,7 @@ render_exs <- function(exs,
     # this helper function determines the randoms seeds for reproducibility
     # most importantly, the exercises will have the same numbers, so that confusion may be avoided.
 
-    n_exs_times_n_students <- n_exs*n_students
+    n_exs_times_n_students <- n_exs * n_students
 
     if (prime_factor > 10)
       stop("Prime factor must be not bigger than 10.")
@@ -86,8 +86,8 @@ render_exs <- function(exs,
     stopifnot(length(primes_chosen) == n_exs_times_n_students)
 
     seed_matrix <-
-      primes_chosen %>%
-      matrix(nrow = n_students,
+      matrix(primes_chosen,
+             nrow = n_students,
              byrow = T)
 
     return(seed_matrix)
@@ -199,6 +199,7 @@ render_exs <- function(exs,
       , verbose = TRUE
       , quiet = FALSE
       , rule = "none"
+      , testid = TRUE
       , mchoice = list(shuffle = TRUE,
                        eval = exams_eval(rule = "none"))
       , schoice = list(shuffle = TRUE,
@@ -209,8 +210,6 @@ render_exs <- function(exs,
 
 
   if (render_yamlrmd) {
-    #source("https://raw.githubusercontent.com/sebastiansauer/Lehre/main/R-Code/exam2yamlrmd.R")
-
 
     exs_w_path <- vector(mode = "character", length = length(exs))
 
@@ -221,7 +220,7 @@ render_exs <- function(exs,
       exs_w_path[i] <- list.files(my_edir,
                                   pattern = exs[i],
                                   recursive = TRUE,
-                                  full.names = TRUE) %>%
+                                  full.names = TRUE) |>
         here::here()
 
       stopifnot(file.exists(exs_w_path[i]))

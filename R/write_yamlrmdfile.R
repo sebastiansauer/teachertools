@@ -15,13 +15,13 @@
 #' @param header_level how many '#' should be padded in order to indicate the header leve?
 #'
 #' @return writes an rmd file
-#' @export
+
 #'
 #' @examples
 #' \dontrun{write_yamlrmdfile(ex_parsed, my_path)}
 write_yamlrmdfile <- function(ex_parsed,
                               path_output,
-                              ex_sol_str = c("Exercise", "Solution", "Categories"),
+                              ex_sol_str = c("Aufgabe", "Lösung", "Kategorien"),
                               print_categories = TRUE,
                               separate_ex_sol = rep("</br>", 10),
                               verbose = TRUE,
@@ -29,9 +29,10 @@ write_yamlrmdfile <- function(ex_parsed,
                               header_level = 1){
 
   # determine the number of hashed to indicate header level:
-  header_level_hashes <- rep("#", header_level) %>% stringr::str_c(collapse = "")
+  header_level_hashes <- rep("#", header_level) |>  stringr::str_c(collapse = "")
 
-  # more yaml to be added`?
+
+  # more yaml to be added?
   ex_parsed$ex_metadata <- stringr::str_c(ex_parsed$ex_metadata, more_yaml, collapse = "\n")
 
 
@@ -56,7 +57,9 @@ write_yamlrmdfile <- function(ex_parsed,
     yamlrmdfile <-
       c(yamlrmdfile,"", "---", "", paste0(ex_sol_str[3], ": "), "",
         yaml::as.yaml(ex_parsed$ex_metadata_yaml$categories))
-  }
+    # yamlrmdfile <-
+      c(ymalrmdfile,"\n", paste0("- ", ex_parsed$ex_metadata$extype,"\n"))
+    }
 
   # build path:
   path_output_ex <- paste0(path_output,"/", ex_parsed$ex_metadata_yaml$title)
@@ -70,7 +73,7 @@ write_yamlrmdfile <- function(ex_parsed,
 
   writeLines(text = yamlrmdfile, con = filename_output)
 
-  if (verbose) cat(paste0("Yaml-Rmd-Exercise file has been written to output dir: ",filename_output, "\n"))
+  if (verbose) message(paste0("Yaml-Rmd-Exercise file has been written to output dir: ",filename_output, "\n"))
 
   return(yamlrmdfile)
 }

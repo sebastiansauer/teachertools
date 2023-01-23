@@ -14,7 +14,7 @@ build_adj_set_answers(dag_def, exposure_var, outcome_var)
 \item{outcome_var}{which var. is the outcome variable? (string)}
 }
 \value{
-tibble wit 1 correct and 4 incorrect solutions
+tibble with 1 correct and 4 incorrect solutions
 }
 \description{
 Producing single choice exercises for minimal adjustment sets

@@ -9,19 +9,26 @@ grade_em_all(
   grading_scheme = NULL,
   verbose = TRUE,
   n_bonus_points = 0,
-  comments = NULL
+  suppress_details = TRUE,
+  suppress_warnings = TRUE,
+  comments = NULL,
+  ...
 )
 }
 \arguments{
 \item{data_path_moodle_csv}{A csv file, possible coming from moodle with exam items. See details.}
 
-\item{grading_scheme}{Defines thresholds for grades}
+\item{grading_scheme}{Defines thresholds for grades, defaults to  \code{c(51, 55, 60, 65, 70, 75, 80, 85, 90, 95)}}
 
-\item{verbose}{if true, additional processing infos are printed}
+\item{verbose}{if true, additional processing infos are printed (lgl, defaults to TRUE)}
 
-\item{n_bonus_points}{Be kind to your students}
+\item{n_bonus_points}{Be kind to your students (int, defaults to zero)}
 
-\item{comments}{comments passed on to each student}
+\item{suppress_details}{suppresses the output of additional columns (lgl, defaults to TRUE)}
+
+\item{comments}{comments passed on to each student (chr, defaults to NULL)}
+
+\item{...}{additional arguments, currently not used}
 }
 \value{
 csv file with grades
@@ -36,5 +43,9 @@ Some preprocssing is being done, such as cleaning the col names.
 }
 \examples{
 \dontrun{grade_em_all(data.csv)}
+
+data_path_moodle_csv <- "/Users/sebastiansaueruser/Google Drive/Lehre/Lehre_AKTUELL/2022-SoSe/QM2/Prüfung/Ergebnisse/raw-data/AWM-QM2-SoSe22-Prüfungsaufgaben-Bewertungen (2).csv"
+my_grading_scheme <-  c(45, 50, 55, 60, 65, 70, 75, 80, 85, 90)
+out <- grade_em_all(data_path_moodle_csv, my_grading_scheme)
 
 }

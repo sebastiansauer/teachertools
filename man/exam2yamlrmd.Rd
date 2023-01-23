@@ -6,8 +6,8 @@
 \usage{
 exam2yamlrmd(
   examfile,
-  path_output,
-  ex_sol_str = c("Exercise", "Solution", "Categories"),
+  path_output = "",
+  ex_sol_str = c("Aufgabe", "Lösung", "Categories"),
   print_categories = FALSE,
   separate_ex_sol = rep("</br>", 10),
   more_yaml = NULL,
@@ -43,4 +43,13 @@ This function calls parse_examfile() using \code{examfile} as input and based on
 }
 \examples{
 \dontrun{exam2yamlrmd(ex_parsed, my_path)}
+examfile_name <- "/Users/sebastiansaueruser/github-repos/rexams-exercises/exercises/sebastiansauer/de/Bayes/pigs2.Rmd"
+out <- exam2yamlrmd(
+ examfile = examfile_name,
+ path_output = "/Users/sebastiansaueruser/Downloads")
+
+
+
+
+
 }

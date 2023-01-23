@@ -94,9 +94,9 @@ prep_csv <- function(submission_file,
 
   stopifnot(any(class(x) == "data.frame"))
   if (verbose){
-    cat(paste0("Dimension of submissions file: ", str_c(dim(x), collapse = "; ")))
+    cat(paste0("Dimension of submissions file: ", stringr::str_c(dim(x), collapse = "; ")))
     cat("\n")
-    cat(paste0("Column names of submission file: ", str_c(names(x), collapse = "; ")))
+    cat(paste0("Column names of submission file: ", stringr::str_c(names(x), collapse = "; ")))
   }
 
   # all names to lower:

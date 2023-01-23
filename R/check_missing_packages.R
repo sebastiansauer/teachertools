@@ -40,7 +40,7 @@ if (length(to_be_installed)>0) {
 if (length(to_be_installed)==0) cat('All packages installed already!\n')
 
 # install missing packages
-if ((length(to_be_installed)>0) & install_missing_packages^) install.packages(to_be_installed, repos = 'https://cloud.r-project.org')
+if ((length(to_be_installed)>0) & install_missing_packages) install.packages(to_be_installed, repos = 'https://cloud.r-project.org')
 
 cat('\nDone!\n\n')
 
