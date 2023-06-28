@@ -16,5 +16,6 @@ ggplot2 object
 Plots Distribution of Grades
 }
 \examples{
-\dontrun{plot_grade_distribution(d_grades)}
+d_grades <- data.frame(grade = sample(1:5, size = 30, replace = TRUE))
+plot_grade_distribution(d_grades)
 }

@@ -15,12 +15,12 @@
 #' \dontrun{canonicalize_df(my_df, my_outputvar)}
 canonicalize_df <- function(df, output_var, keep_only_numeric = TRUE, verbose = TRUE) {
 
-  assertthat::assert_that(typeof(output_var) == "character", msg = "df must be of type character")
+  assertthat::assert_that(typeof(output_var) == "character", msg = "output var must be of type character")
 
   # hacks:
   if ("sleep_total" %in% names(df)) df <- df |>  dplyr::select(-sleep_total)
 
-  # rm ID cols
+  # rm ID cols:
   cols_wo_id <- setdiff(names(df), c("X", "...1", "ID", "id"))  # exclude ID vars
   df <- df |> dplyr::select(tidyselect::all_of(cols_wo_id))
 

@@ -25,6 +25,9 @@ This function assigns grades
 If no grade scheme is given, the function uses it own grade scheme,
 which is printed when the argument \code{verbose} is \code{TRUE}.
 The number of thresholds ("fence posts") must be equal the number of grades ("fence ways") plus 1.
+The default grade \code{grades_scheme} used is  \code{c(5, 4, 3.7, 3.3, 3.0, 2.7, 2.3, 2, 1.7, 1.3, 1)},
+which is of length 11
+´
 }
 \examples{
 \dontrun{grade_em(thresholds, values)}

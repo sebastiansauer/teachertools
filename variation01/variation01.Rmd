@@ -1,0 +1,143 @@
+---
+exname: def-statistik01
+extype: schoice
+exsolution: 1
+exshuffle: no
+date: '2023-02-01'
+slug: variation01
+title: variation01
+categories: schoice
+
+---
+
+
+
+
+```{r libs, include = FALSE}
+library(tidyverse)
+library(easystats)
+```
+
+
+```{r global-knitr-options, include=FALSE}
+knitr::opts_chunk$set(fig.pos = 'H',
+                      fig.asp = 0.618,
+                      fig.width = 4,
+                      fig.cap = "", 
+                      fig.path = "",
+                      echo = TRUE,
+                      message = FALSE,
+                      fig.show = "hold")
+
+```
+
+
+
+
+
+
+# Aufgabe
+
+In welchem Datensatz gibt es mehr Variation?
+
+
+```{r echo=FALSE}
+set.seed(42)
+d <- tibble(
+  x1 = rnorm(10, mean = 0, sd = .1),
+  x2 = rnorm(10, mean = 0, sd = 1),
+  x3 = rnorm(10, mean = 0, sd = 10),
+  x4 = rnorm(10, mean = 0, sd = 100),
+)
+```
+
+
+Datensatz A:
+
+```{r}
+d %>% 
+  select(x1) %>% 
+  display()
+```
+
+
+
+Datensatz B:
+
+```{r}
+d %>% 
+  select(x2) %>% 
+  display()
+```
+
+
+
+
+Datensatz C:
+
+```{r}
+d %>% 
+  select(x3) %>% 
+  display()
+```
+
+
+
+
+
+
+Datensatz D:
+
+```{r}
+d %>% 
+  select(x4) %>% 
+  display()
+```
+
+
+
+Answerlist
+----------
+* A
+* B
+* C
+* D
+
+
+
+
+
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+
+# Lösung
+
+
+Answerlist
+----------
+
+
+* Falsch
+* Falsch
+* Falsch
+* Wahr
+
+
+
+
+
+
+---
+
+Kategorien: 
+
+- schoice
+

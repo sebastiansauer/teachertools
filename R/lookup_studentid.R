@@ -22,30 +22,34 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{lookup_studentid(my_students, "Sauer")}
+#' studentilist_path <- "/Users/sebastiansaueruser/Google Drive/ORGA-HS-Ansbach/22-WS/studentis-awm-2022.csv"
+#' studentilist <- read.csv(studentilist)
+#' lookup_studentid(studentilist, "Maier")
 #'
 #'
-lookup_studentid <- function(csv_file, lastname, firstname = NULL, verbose = FALSE,  fun = rio::import, pad_to = 8L, strict = TRUE) {
+lookup_studentid <- function(d, lastname, firstname = NULL,
+                             verbose = FALSE,  pad_to = 8L,
+                             id_col = "matrikelnr",
+                             strict = FALSE) {
 
 
-  d <- fun(file = csv_file)
 
   out <- d
 
-  d$id <- stringr::str_pad(out$id, pad_to, side = "left", pad = "0")
+  d$id <- stringr::str_pad(as.character(out[[id_col]]), pad_to, side = "left", pad = "0")
 
   out2 <- out[out$lastname == lastname, ]
 
   if (!is.null(firstname)) out2 <- out2[out2$firstname == firstname, ]
 
-  out3 <- out2$id
+  out3 <- out2[[id_col]]
 
   if (length(out3) == 0) {
     warning("Name not found. Returning NA!")
     out3 <- NA
   }
   if (length(out3) > 1) {
-    warning("More than matching name!")
+    warning("More than a single name matching!")
     print(out2)
     if (strict) out3 <- NA
   }

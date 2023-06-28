@@ -19,8 +19,13 @@
 #'
 #' @examples
 #' \dontrun{write_yamlrmdfile(ex_parsed, my_path)}
+#' ex_parsed <- readr::read_rds("data-raw/ex_parsed.rds")
+#' out <- write_yamlrmdfile(ex_parsed)
+
+
+
 write_yamlrmdfile <- function(ex_parsed,
-                              path_output,
+                              path_output = ".",
                               ex_sol_str = c("Aufgabe", "Lösung", "Kategorien"),
                               print_categories = TRUE,
                               separate_ex_sol = rep("</br>", 10),
@@ -54,11 +59,16 @@ write_yamlrmdfile <- function(ex_parsed,
 
   # add "categories" if desired:
   if (print_categories) {
+    part_categories <-
+      c("", "---", "",
+        paste0(ex_sol_str[3], ": "),
+        "",
+        stringr::str_c(yaml::as.yaml(ex_parsed$ex_metadata_yaml$categories), collapse = ""))
+
     yamlrmdfile <-
-      c(yamlrmdfile,"", "---", "", paste0(ex_sol_str[3], ": "), "",
-        yaml::as.yaml(ex_parsed$ex_metadata_yaml$categories))
+      c(yamlrmdfile, part_categories)
     # yamlrmdfile <-
-      c(ymalrmdfile,"\n", paste0("- ", ex_parsed$ex_metadata$extype,"\n"))
+    #   c(yamlrmdfile,"\n", paste0("- ", ex_parsed$ex_metadata_yaml$extype,"\n"))
     }
 
   # build path:

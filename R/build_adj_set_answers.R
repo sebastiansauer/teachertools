@@ -3,7 +3,7 @@
 #' Producing single choice exercises for minimal adjustment sets
 #'
 #' This function produces a single choice answer list for suitable
-#' for R/exam exercises. Use this function to build single choice question asking for the minimal adjustment set
+#' for R/exam exercises. Use this function to build single choice question asking for the minimal adjustment set.
 #'
 #' @param dag_def dag defintion, based on R package dagitty (string)
 #' @param exposure_var which variable is the exposure (string)?

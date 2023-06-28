@@ -28,7 +28,7 @@ plot_notenspiegel <- function(d, plot_title = "Notenverteilung", var = "grade"){
 
   notenschnitt <- round(mean(d[["Note"]], na.rm = TRUE), 1)
 
-  bestehensquote <- round(sum(d$pass[d$pass == TRUE]) / nrow(d), 2)
+  bestehensquote <- round(sum(d$pass[d$pass == TRUE], na.rm = TRUE) / nrow(d), 2)
 
   data_count <-
     d %>%

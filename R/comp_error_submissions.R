@@ -4,6 +4,8 @@
 #'
 #' Given a number of csv files with predictions (and id),
 #' this function returns the prediction error (such as MAE or RMSE) for each prediction
+#' The "control data" is the test data including the "solution", ie., to variable to
+#' be predicted.
 #'
 #'
 #' @param path_to_submissions path  and file (CSV) with preditions (character)
@@ -11,7 +13,7 @@
 #' @param error_fun which error fun to use (mae, rmse, ...), possibly from the tidymodels ecoverse
 #' @param path_to_submissions path to submission folder with submission files (chr)
 #' @param path_to_train_data  path to train data (chr)
-#' @param path_to_test_data path to test data (Chr)
+#' @param path_to_control_data path to test data (with y values) (Chr)
 #' @param max_row how many rows should be prepared maximally (int)?
 #' @param start_id number of the first id (int)
 #' @param name_output_var name of the variable to be predicted (chr)

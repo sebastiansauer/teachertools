@@ -27,7 +27,9 @@ assign_grade <- function(d, grading_scheme = NULL, var = "correct_prop") {
                                                    "1.3" = .85,
                                                    "1.0" = .90)
 
-  d$grade_f <- cut(d[[var]], breaks = c(grading_scheme, ".7" = 1),
+  stopifnot(length(grading_scheme) == 11)
+
+  d$grade_f <- cut(d[[var]], breaks = c(grading_scheme, 1.01),
                  labels = names(grading_scheme),
                  right = FALSE)
   d$pass <- ifelse(d$grade_f == "5", FALSE, TRUE)

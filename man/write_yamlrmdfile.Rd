@@ -6,7 +6,7 @@
 \usage{
 write_yamlrmdfile(
   ex_parsed,
-  path_output,
+  path_output = ".",
   ex_sol_str = c("Aufgabe", "Lösung", "Kategorien"),
   print_categories = TRUE,
   separate_ex_sol = rep("</br>", 10),
@@ -44,4 +44,6 @@ by the function parse_examfile() and then writes rmd file with yaml header.
 }
 \examples{
 \dontrun{write_yamlrmdfile(ex_parsed, my_path)}
+ex_parsed <- readr::read_rds("data-raw/ex_parsed.rds")
+out <- write_yamlrmdfile(ex_parsed)
 }

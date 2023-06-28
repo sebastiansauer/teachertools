@@ -80,14 +80,14 @@ grading_scheme <- function(scheme_type = 1, output_type = "proportion") {
   if (scheme_type == 5) scheme <- c("5" = 0,
                                     "4" = 40,
                                     "3.7" = 46,
-                                    "3.3" = 51,
-                                    "3.0" = 56,
-                                    "2.7" = 73,
-                                    "2.3" = 78,
-                                    "2.0" = 86,
-                                    "1.7" = 92,
-                                    "1.3" = 98,
-                                    "1.0" = 90)
+                                    "3.3" = 52,
+                                    "3.0" = 58,
+                                    "2.7" = 64,
+                                    "2.3" = 70,
+                                    "2.0" = 76,
+                                    "1.7" = 83,
+                                    "1.3" = 88,
+                                    "1.0" = 94)
 
   if (output_type == "proportion") scheme <- scheme / 100
 

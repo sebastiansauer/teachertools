@@ -5,27 +5,27 @@
 \title{lookup student id}
 \usage{
 lookup_studentid(
-  csv_file,
+  d,
   lastname,
   firstname = NULL,
   verbose = FALSE,
-  fun = rio::import,
   pad_to = 8L,
-  strict = TRUE
+  id_col = "matrikelnr",
+  strict = FALSE
 )
 }
 \arguments{
-\item{csv_file}{Path to file with IDs (not a tibble) and names of students (character)}
-
 \item{lastname}{One word indicating the last name (character)}
 
 \item{verbose}{More output? (lgl)}
 
-\item{fun}{which reading fun should be used? Defaults to rio::import}
-
 \item{pad_to}{to how many digits should the ID be padded with zeros (from the left side)? Defaults to 8 (integer)}
 
 \item{strict}{if TRUE, NAs are returned in case of multiple (ambiguous) results}
+
+\item{csv_file}{Path to file with IDs (not a tibble) and names of students (character)}
+
+\item{fun}{which reading fun should be used? Defaults to rio::import}
 }
 \value{
 student id (chracter)
@@ -42,7 +42,9 @@ in order to retain leading zeros of the ID. Columns are parsed as characters.
 To that end, zeros are padded to the left side.
 }
 \examples{
-\dontrun{lookup_studentid(my_students, "Sauer")}
+studentilist_path <- "/Users/sebastiansaueruser/Google Drive/ORGA-HS-Ansbach/22-WS/studentis-awm-2022.csv"
+studentilist <- read.csv(studentilist)
+lookup_studentid(studentilist, "Maier")
 
 
 }

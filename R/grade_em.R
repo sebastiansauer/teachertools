@@ -6,6 +6,9 @@
 #' If no grade scheme is given, the function uses it own grade scheme,
 #' which is printed when the argument `verbose` is `TRUE`.
 #' The number of thresholds ("fence posts") must be equal the number of grades ("fence ways") plus 1.
+#' The default grade `grades_scheme` used is  `c(5, 4, 3.7, 3.3, 3.0, 2.7, 2.3, 2, 1.7, 1.3, 1)`,
+#' which is of length 11
+#' ´
 #'
 #' @param x student's prediction error value, such as MAE or RMSE (numeric)
 #' @param thresholds thresholds for a given grade (numeric vector of length 12)

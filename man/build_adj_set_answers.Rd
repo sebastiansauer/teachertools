@@ -21,7 +21,7 @@ Producing single choice exercises for minimal adjustment sets
 }
 \details{
 This function produces a single choice answer list for suitable
-for R/exam exercises. Use this function to build single choice question asking for the minimal adjustment set
+for R/exam exercises. Use this function to build single choice question asking for the minimal adjustment set.
 }
 \examples{
 \dontrun{build_adj_set_answers(my_dag, x, y,)}

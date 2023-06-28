@@ -18,7 +18,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{exam2yamlrmd(ex_parsed, my_path)}
+#' \dontrun{exam2yamlrmd(examfile, path_output)}
 #' examfile_name <- "/Users/sebastiansaueruser/github-repos/rexams-exercises/exercises/sebastiansauer/de/Bayes/pigs2.Rmd"
 #' out <- exam2yamlrmd(
 #'  examfile = examfile_name,

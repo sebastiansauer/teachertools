@@ -24,8 +24,6 @@ comp_error_submissions(
 
 \item{path_to_train_data}{path to train data (chr)}
 
-\item{path_to_test_data}{path to test data (Chr)}
-
 \item{max_row}{how many rows should be prepared maximally (int)?}
 
 \item{start_id}{number of the first id (int)}
@@ -37,6 +35,8 @@ comp_error_submissions(
 \item{name_pred_column}{name of the columns with the predictions (chr)?}
 
 \item{error_fun}{which error fun to use (mae, rmse, ...), possibly from the tidymodels ecoverse}
+
+\item{path_to_control_data}{path to test data (with y values) (Chr)}
 }
 \value{
 tibble with prediction error value
@@ -47,6 +47,8 @@ Computes prediction error for student submissions
 \details{
 Given a number of csv files with predictions (and id),
 this function returns the prediction error (such as MAE or RMSE) for each prediction
+The "control data" is the test data including the "solution", ie., to variable to
+be predicted.
 }
 \examples{
 \dontrun{comp_error_submissions(mypath)}

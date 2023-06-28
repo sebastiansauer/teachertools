@@ -1,0 +1,170 @@
+---
+exname: pigs2
+extype: num
+extol: 1
+exsolution: r fmt(sol, 2)
+categories:
+- bayes
+- regression
+- exam-22
+- num
+date: '2023-02-01'
+slug: pigs2
+title: pigs2
+
+---
+
+
+
+
+```{r libs, include = FALSE}
+library(tidyverse)
+```
+
+
+```{r global-knitr-options, include=FALSE}
+knitr::opts_chunk$set(fig.pos = 'H',
+                      fig.asp = 0.618,
+                      fig.width = 4,
+                      fig.cap = "", 
+                      fig.path = "",
+                      echo = TRUE,
+                      message = FALSE,
+                      fig.show = "hold")
+```
+
+
+
+
+
+
+# Aufgabe
+
+```{r message=FALSE}
+library(tidyverse)  # Datenjudo
+library(rstanarm)  # Bayes-Inferenz
+library(easystats)  # Komfort
+```
+
+Laden Sie den Datensatz `toothgrowth`, z.B. von [dieser Quelle](https://vincentarelbundock.github.io/Rdatasets/csv/datasets/ToothGrowth.csv).
+In dem Datensatz sind die Daten eines einfaches Experiments berichtet.
+
+
+
+
+
+```{r echo = FALSE}
+d_path <- "https://vincentarelbundock.github.io/Rdatasets/csv/datasets/ToothGrowth.csv"
+d <- read_csv(d_path)
+```
+
+
+In dem Experiment wird der (kausale) Effekt verschiedener Darreichungsformen und Konzentrationen von Vitamin C auf das Zahnwachstum von Meerschweinchen untersucht. 
+
+Forschungsfrage:
+
+Hat die Dosis (`dose`) einen (kausalen) Effekt auf die AV, Zahnlänge (`len`)?
+
+Wir gehen mal einfach davon aus, dass der Faktor experimentell (also randomisiert und auf Störeffekte hin kontrollliert) verabreicht wurde. Sonst wäre eine Kausalinterpretation nicht (ohne Weiteres) möglich.
+
+
+
+*Berechnen Sie die Breite eines 95%-HDI für den Effekt!*
+
+
+
+
+[Hinweise](https://start-bayes.netlify.app/pruefung#bearbeitungshinweise)
+
+
+
+
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+
+# Lösung
+
+1. Schritt: Modell berechnen
+
+```{r}
+lm2 <- stan_glm(len ~ dose, data = d,
+                seed = 42,
+                refresh = 0)
+```
+
+Zur Erinnerung: Bei der Regressionsformel gilt immer `av ~  uv`.
+
+
+2. Schritt: Posteriori-Verteilung betrachten
+
+Mit `parameters()` kriegt man einen guten Überblick über die Modellparameter:
+
+```{r}
+parameters(lm2)
+```
+
+Das Modell zeigt einen positiven Effekt für `dose`:
+
+Pro Einheit von `dose` steigt die Zahnlänge (`len`) um ca. 8-12 mm im Schnitt (laut unserem Modell).
+
+*Null* ist nicht im Intervall enthalten;
+die Nullhypothese ist demnach *auszuschließen* (falls das jemanden interessiert).
+Man sagt, man *verwirft* die Nullhypothese (oder weist sie zurück).
+
+Das können wir auch plotten:
+
+```{r}
+plot(parameters(lm2))
+```
+
+Man kann sich auch ein HDI direkt ausgeben, ohne die sonstigen Informationen, die `parameters()` ausgibt:
+
+```{r}
+hdi(lm2, ci = .95)
+```
+
+Wie wir sehen, wird im Standard ein 95%-Intervall berichtet,
+wie in der Aufgabenstellung verlangt. 
+
+Wieder sehen wir, die Null ist *nicht* im Intervall enthalten. 
+Null ist also *kein* plausibler Wert für den gesuchten Effekt (laut unserem Modell).
+
+Schauen wir uns mal zum Vergleich die Stichproben-Daten an:
+
+```{r}
+d %>% 
+  ggplot(aes(y = len, x = dose)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+
+Man sieht deutlich einen positiven Effekt: Die Regressionsgerade steigt.
+
+
+Die Breite des Schätzintervalls für den Effekt beträgt also:
+
+```{r}
+sol <- 11.70 - 7.77
+sol
+```
+
+
+
+
+---
+
+Kategorien: 
+
+- - bayes
+- regression
+- exam-22
+- num
+
