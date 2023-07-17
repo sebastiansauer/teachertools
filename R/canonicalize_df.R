@@ -26,6 +26,7 @@ canonicalize_df <- function(df, output_var, keep_only_numeric = TRUE, verbose = 
 
   # rm highly correlated cols:
   col_numeric_names <- df |> dplyr::select(tidyselect::where(is.numeric)) |> names()
+  col_numeric_names_flat <- stringr::str_flatten(col_numeric_names, collapse = ", ")
 
   redundant_cols <- caret::findCorrelation(cor(df[col_numeric_names],
                                         use = "complete.obs"),
@@ -46,7 +47,7 @@ canonicalize_df <- function(df, output_var, keep_only_numeric = TRUE, verbose = 
 
   preds <- setdiff(vars, output_var)
   assertthat::assert_that(length(preds) >= 2, msg = glue::glue("There must be at least two predictors. I found only {preds}"))
-  assertthat::assert_that(ncol(df) >= 3, msg = "There must be at least 3 columns.")
+  assertthat::assert_that(ncol(df) >= 3, msg = glue::glue("There must be at least 3 columns. I found these: {col_numeric_names_flat}."))
   assertthat::assert_that(output_var %in% vars, msg = glue::glue("The output variable, {output_var}, is not among the column names."))
 
   k <- 2

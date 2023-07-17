@@ -32,9 +32,12 @@ teaching_df <- function(df = NULL, canonicalize = TRUE, verbose = TRUE, ...) {
                          "msleep",
                          "Boston",
                          "TeachingRatings",
-                         "trees",
+                        # "trees",
                          "iris",
-                         "airquality"
+                         "airquality",
+                        "education",
+                        "Affairs",
+                        "CASchools"
                          ),
       main_var = c("mpg",
                    "bill_length_mm",
@@ -43,9 +46,12 @@ teaching_df <- function(df = NULL, canonicalize = TRUE, verbose = TRUE, ...) {
                    "awake",
                    "medv",
                    "eval",
-                   "Volume",
+                   #"Volume",
                    "Sepal.Length",
-                   "Ozone"
+                   "Ozone",
+                   "Y",
+                   "affairs",
+                   "math"
 
                    ),
       num_vars_count = c(11,
@@ -55,9 +61,12 @@ teaching_df <- function(df = NULL, canonicalize = TRUE, verbose = TRUE, ...) {
                          5,
                          12,
                          6,
-                         3,
+                        # 3,
                          4,
-                         6
+                         6,
+                        5,
+                        7,
+                        11
                          ),
       source = c(
         "https://vincentarelbundock.github.io/Rdatasets/csv/datasets/mtcars.csv",
@@ -67,9 +76,12 @@ teaching_df <- function(df = NULL, canonicalize = TRUE, verbose = TRUE, ...) {
         "https://vincentarelbundock.github.io/Rdatasets/csv/ggplot2/msleep.csv",
         "https://vincentarelbundock.github.io/Rdatasets/csv/MASS/Boston.csv",
         "https://vincentarelbundock.github.io/Rdatasets/csv/AER/TeachingRatings.csv",
-        "https://vincentarelbundock.github.io/Rdatasets/csv/datasets/trees.csv",
+        # "https://vincentarelbundock.github.io/Rdatasets/csv/datasets/trees.csv", DOESNT WORK
         "https://vincentarelbundock.github.io/Rdatasets/csv/datasets/iris.csv",
-        "https://vincentarelbundock.github.io/Rdatasets/csv/datasets/airquality.csv"
+        "https://vincentarelbundock.github.io/Rdatasets/csv/datasets/airquality.csv",
+        "https://vincentarelbundock.github.io/Rdatasets/csv/robustbase/education.csv",
+        "https://vincentarelbundock.github.io/Rdatasets/csv/AER/Affairs.csv",
+        "https://vincentarelbundock.github.io/Rdatasets/csv/AER/CASchools.csv"
       ),
       doc = c(
         "https://vincentarelbundock.github.io/Rdatasets/doc/datasets/mtcars.html",
@@ -79,9 +91,12 @@ teaching_df <- function(df = NULL, canonicalize = TRUE, verbose = TRUE, ...) {
         "https://vincentarelbundock.github.io/Rdatasets/doc/ggplot2/msleep.html",
         "https://vincentarelbundock.github.io/Rdatasets/doc/MASS/Boston.html",
         "https://vincentarelbundock.github.io/Rdatasets/doc/AER/TeachingRatings.html",
-        "https://vincentarelbundock.github.io/Rdatasets/doc/datasets/trees.html",
+        #"https://vincentarelbundock.github.io/Rdatasets/doc/datasets/trees.html",
         "https://vincentarelbundock.github.io/Rdatasets/doc/datasets/iris.html",
-        "https://vincentarelbundock.github.io/Rdatasets/doc/datasets/airquality.html"
+        "https://vincentarelbundock.github.io/Rdatasets/doc/datasets/airquality.html",
+        "https://vincentarelbundock.github.io/Rdatasets/doc/robustbase/education.html",
+        "https://vincentarelbundock.github.io/Rdatasets/doc/AER/Affairs.html",
+        "https://vincentarelbundock.github.io/Rdatasets/doc/AER/CASchools.html"
       )
     )
   if (is.null(df)) {
