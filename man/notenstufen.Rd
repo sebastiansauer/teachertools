@@ -15,6 +15,9 @@ numeric vector, can be of different length depending on type
 \description{
 Returns notenstufen of various types (e.g, "1.0", "1.3",...)
 }
+\details{
+Teh different types support either coarse grades (1,2,3,...) or more fine grained grades (1.3, 1.7, ...)
+}
 \examples{
 notenstufen()
 

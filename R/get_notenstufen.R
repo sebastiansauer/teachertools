@@ -2,6 +2,8 @@
 #'
 #' Returns notenstufen of various types (e.g, "1.0", "1.3",...)
 #'
+#' Teh different types support either coarse grades (1,2,3,...) or more fine grained grades (1.3, 1.7, ...)
+#'
 #' @param type type of notenstufen, currently are 4 types supported (integer, defaults to 1)
 #'
 #' @return numeric vector, can be of different length depending on type

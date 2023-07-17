@@ -2,12 +2,12 @@
 % Please edit documentation in R/join_gradinglists2.R
 \name{join_gradinglists2}
 \alias{join_gradinglists2}
-\title{Join two grading lists}
+\title{Join two grading lists DEPRECATEAD}
 \usage{
 join_gradinglists2(moodle_grading_d, course_d, grades_var = "grade")
 }
 \arguments{
-\item{moodle_grading_d}{data frame with results of moodle grading}
+\item{moodle_grading_d}{data frame with results of Moodle grading}
 
 \item{course_d}{data frame without grades from university}
 
@@ -16,17 +16,20 @@ join_gradinglists2(moodle_grading_d, course_d, grades_var = "grade")
 \item{comments}{comments passed to each student (separate comments are not supported)}
 }
 \value{
-data frame for grading based on the instutation name list
+data frame for grading based on the institution name list
 }
 \description{
-Join moodle grading list with Instituation's grading list
+Join Moodle grading list with Institution's grading list
 }
 \details{
 Based on the Moodle csv file, a grading list has been created.
-This function now merges the moodle grading list with a XLSX template file
+This function now merges the Moodle grading list with a XLSX template file
 from the institution. Merging (joining) is performed by based on surname
 and first names of the student. Joining errors are reported. Note that
 names are no unique nor save way to join lists.
+ATTENTION: This function does not parse the participants excel file,
+but expects it as a cleaned data fraem. Use \code{join_gradinglist()}
+if you need to get it parsed.
 }
 \examples{
  \dontrun{join_gradinglists(d1, d2)}

@@ -28,7 +28,7 @@ join_gradinglists(
 \item{grades_var}{variable in Moodle table holding the grades of the students}
 }
 \value{
-data frame for grading based on the instutation name list
+data frame for grading based on the institution name list
 
 data frame for grading based on the instutation name list
 }
@@ -43,6 +43,7 @@ This function now merges the moodle grading list with a XLSX template file
 from the institution. Merging (joining) is performed by based on surname
 and first names of the student. Joining errors are reported. Note that
 names are no unique nor save way to join lists.
+ATTENTION:
 
 Based on the Moodle csv file, a grading list has been created.
 This function now merges the moodle grading list with a XLSX template file

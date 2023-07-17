@@ -1,20 +1,23 @@
 
-#' Join two grading lists
+#' Join two grading lists DEPRECATEAD
 #'
-#' Join moodle grading list with Instituation's grading list
+#' Join Moodle grading list with Institution's grading list
 #'
 #' Based on the Moodle csv file, a grading list has been created.
-#' This function now merges the moodle grading list with a XLSX template file
+#' This function now merges the Moodle grading list with a XLSX template file
 #' from the institution. Merging (joining) is performed by based on surname
 #' and first names of the student. Joining errors are reported. Note that
 #' names are no unique nor save way to join lists.
+#' ATTENTION: This function does not parse the participants excel file,
+#' but expects it as a cleaned data fraem. Use `join_gradinglist()`
+#' if you need to get it parsed.
 #'
-#' @param moodle_grading_d data frame with results of moodle grading
+#' @param moodle_grading_d data frame with results of Moodle grading
 #' @param course_d data frame without grades from university
 #' @param comments comments passed to each student (separate comments are not supported)
 #' @param grades_var variable in Moodle table holding the grades of the students
 #'
-#' @return  data frame for grading based on the instutation name list
+#' @return  data frame for grading based on the institution name list
 #' @export
 #'
 #' @examples
@@ -26,6 +29,9 @@ join_gradinglists2 <- function(moodle_grading_d, course_d, grades_var = "grade")
   names(moodle_grading_d)[which(names(moodle_grading_d) == grades_var)] <- "grades"
 
     if ("bewertung" %in% names(moodle_grading_d)) moodle_grading_d$bewertung <- NULL
+
+
+
 
   results_df <-
     course_d %>%

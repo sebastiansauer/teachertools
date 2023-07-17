@@ -4,7 +4,12 @@
 \alias{plot_notenspiegel}
 \title{Plot Notenspiegel}
 \usage{
-plot_notenspiegel(d, plot_title = "Notenverteilung", var = "grade")
+plot_notenspiegel(
+  d,
+  plot_title = "Notenverteilung",
+  var = "grade",
+  show_prop_avg = FALSE
+)
 }
 \arguments{
 \item{d}{data frame containing grades}
@@ -12,6 +17,8 @@ plot_notenspiegel(d, plot_title = "Notenverteilung", var = "grade")
 \item{plot_title}{Title to be assigned to the plot}
 
 \item{var}{variable holding the grades to be plotted}
+
+\item{show_prop_avg}{Should the mean percentage value be shown (defaults to FALSE)}
 }
 \value{
 ggplot2 object
@@ -22,6 +29,8 @@ Plot Grade Distribution (Notenspiegel).
 \details{
 Plot distribution of grades, a simple wrapper around ggplot2
 Annotations are currently in German language
+
+IF \code{show_prop_avg} is TRUE, it is expected that a column by the name of \code{prop} is available which holds the percentage of points achieved by student
 }
 \examples{
 \dontrun{plot_notenspiegel(grades_data)}

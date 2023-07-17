@@ -8,13 +8,14 @@
 #' from the institution. Merging (joining) is performed by based on surname
 #' and first names of the student. Joining errors are reported. Note that
 #' names are no unique nor save way to join lists.
+#' ATTENTION:
 #'
-#' @param moodle_grading_d data frame with results of moodle grading
+#' @param moodle_grading_d data frame with results of Moodle grading
 #' @param course_file path to XLSX template file from university
 #' @param comments comments passed to each student (separate comments are not supported)
 #' @param grades_var variable in Moodle table holding the grades of the students
 #'
-#' @return  data frame for grading based on the instutation name list
+#' @return  data frame for grading based on the institution name list
 #' @export
 #'
 #' @examples
@@ -27,13 +28,24 @@ join_gradinglists <- function(moodle_grading_d, course_file, comments = NULL, gr
   # make sure name of grading var is "grades":
   names(moodle_grading_d)[which(names(moodle_grading_d) == grades_var)] <- "grades"
 
+
   # load results template:
   participants_results_df <- readxl::read_excel(participants_results_path,
                                                 skip  = 20)  %>% # skip the first few lines
+    # clean data:
     janitor::remove_empty("rows") %>%
     janitor::clean_names() %>%
     dplyr::rename(nachname = "name") %>%
     dplyr::select(-bewertung)
+
+
+  # shorten first names to one name only, eg., "Sebastian Richard" is shortened to "Sebastian":
+  moodle_grading_d$vorname <-
+    map_chr(moodle_grading_d$vorname, ~ str_extract(.x, "([^\\s]+)")[1])
+
+  participants_results_df$vorname <-
+    map_chr(participants_results_df$vorname, ~ str_extract(.x, "([^\\s]+)")[1])
+
 
   if ("bewertung" %in% names(moodle_grading_d)) moodle_grading_d$bewertung <- NULL
 
