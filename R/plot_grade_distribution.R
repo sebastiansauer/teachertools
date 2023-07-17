@@ -29,8 +29,9 @@ plot_grade_distribution <- function(d_grades){
     ggplot2::geom_vline(xintercept = grade_mean,
                linetype = "dashed") +
     ggplot2::annotate("label", x = grade_mean,
-             y = 1,
-             label = base::paste0("Mean: ", grade_mean)) +
+                      y = Inf,
+                      hjust = 0.5, vjust = 1,
+                      label = base::paste0("Mean: ", grade_mean)) +
     ggplot2::labs(title = "Grade distribution",
          caption = base::paste0("n = ", base::nrow(d_grades), "; proportion pass/fail: ", bestehensquote, "/", 1 - bestehensquote),
          x = "grades",
