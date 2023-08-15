@@ -1,5 +1,15 @@
 # teachertools (development version)
 
+
+# 0.3.0.9000
+
+
+## Minor changes and bug fixes
+
+* prep_csv: if only 1 column is present, but it is not named "id" or "pred", rename it to "pred" and add id variable
+
+# 0.2.0.9000
+
 Some small updates
 
 ## Minor changes and bug fixes

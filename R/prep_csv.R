@@ -66,6 +66,7 @@ prep_csv <- function(submission_file,
 
   stopifnot(start_id > 0)
 
+  if (is.null(start_id)) start_id <- 1
 
 
 
@@ -74,7 +75,7 @@ prep_csv <- function(submission_file,
     cat(paste0("Assuming this path/file name: ", path_to_test_data, "\n"))
   }
 
-  # import test/olution df file:
+  # import test/solution df file:
   #stopifnot(file.exists(path_to_test_data))  # appears not to work for remote files
   solution_df <- readr::read_csv(path_to_test_data,
                                  show_col_types = FALSE)
@@ -160,10 +161,10 @@ prep_csv <- function(submission_file,
   # and add an id column
   if ((ncol(x) == 1) & (nrow(x) > 0)) {
     names(x) <- "pred"
-    x["id"] <- NA
+    x$id <- start_id:(start_id + nrow(x) - 1)
   }
 
-    # if "pred" and "id" are existing columns, select only those two:
+  # if "pred" and "id" are existing columns, select only those two:
   if (all(c("id", "pred") %in% names(x))) {
     x <-
       x %>%
@@ -186,21 +187,26 @@ prep_csv <- function(submission_file,
         id = start_id:(start_id + nrow(x) - 1))
   }
 
-  x$id <- as.integer(x$id)  # will not fail if "id" is not present
+  x$id <- as.integer(x$id)  # will _not_ fail if "id" is not present
 
 
-  # Intervene if no data have been submitted:
-  if (nrow(x) == 1) {
-    comment_to_student <- "Submission file has 1 detected row only."
-    student_fails <- TRUE
-    if (verbose) cat(comment_to_student)
-    cat("\n")
-    x <-
-      tibble::tibble(
-        id = c(NA_integer_),
-        pred = c(NA_real_)
-      )
-  }
+  # if two columns are present, but "id" and "pred" are not the names
+
+  if ((length(names(x)) == 2))
+
+
+    # Intervene if no data have been submitted:
+    if (nrow(x) == 1) {
+      comment_to_student <- "Submission file has 1 detected row only."
+      student_fails <- TRUE
+      if (verbose) cat(comment_to_student)
+      cat("\n")
+      x <-
+        tibble::tibble(
+          id = c(NA_integer_),
+          pred = c(NA_real_)
+        )
+    }
 
   if (nrow(x) == 0) {
     comment_to_student <- "Submission file has zero detected rows."
@@ -240,9 +246,9 @@ prep_csv <- function(submission_file,
 
   # filter max n=`max_row` rows, if `max_row` is not NULL:
   if (!is.null(max_row)) {
-  x2 <-
-    x2 %>%
-    dplyr::slice(1:max_row)
+    x2 <-
+      x2 %>%
+      dplyr::slice(1:max_row)
   }
 
 
@@ -252,6 +258,11 @@ prep_csv <- function(submission_file,
   solution_df <-
     solution_df %>%
     dplyr::rename(y = {{name_output_var}})
+
+
+  # add id column in solution df if not present:
+  if (!("id" %in% names(solution_df))) solution_df$id <- start_id:(start_id + nrow(solution_df) - 1)
+
 
   # Make sure "id" is of type integer:
   solution_df <-
@@ -269,7 +280,7 @@ prep_csv <- function(submission_file,
     solution_df %>%
     dplyr::select(id, y) %>%
     dplyr::left_join(x2,
-              by = "id")
+                     by = "id")
 
 
   # make sure y is numeric, not integer:
@@ -310,9 +321,9 @@ prep_csv <- function(submission_file,
 
 
 
-    # x2 <-
-    #   x2 %>%
-    #   dplyr::mutate(pred = tidyr::replace_na(pred, base::mean(train_df$y, na.rm = TRUE)))
+  # x2 <-
+  #   x2 %>%
+  #   dplyr::mutate(pred = tidyr::replace_na(pred, base::mean(train_df$y, na.rm = TRUE)))
 
 
   if (verbose) cat("Replacing NA with mean of y (the output variable).\n")
@@ -335,3 +346,5 @@ prep_csv <- function(submission_file,
 
   return(x_joined2)
 }
+
+

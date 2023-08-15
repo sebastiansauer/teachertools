@@ -18,7 +18,7 @@ comp_error_submissions(
 )
 }
 \arguments{
-\item{path_to_submissions}{path to submission folder with submission files (chr)}
+\item{path_to_submissions}{path to submission folder with processed submission files (chr)}
 
 \item{verbose}{Print infos (lgl)?}
 

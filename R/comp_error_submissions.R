@@ -11,7 +11,7 @@
 #' @param path_to_submissions path  and file (CSV) with preditions (character)
 #' @param verbose Print infos (lgl)?
 #' @param error_fun which error fun to use (mae, rmse, ...), possibly from the tidymodels ecoverse
-#' @param path_to_submissions path to submission folder with submission files (chr)
+#' @param path_to_submissions path to submission folder with processed submission files (chr)
 #' @param path_to_train_data  path to train data (chr)
 #' @param path_to_control_data path to test data (with y values) (Chr)
 #' @param max_row how many rows should be prepared maximally (int)?
@@ -41,14 +41,15 @@ comp_error_submissions <- function(path_to_submissions = "Submissions/",
   if (verbose) cat("This is function `comp_error_submissions()` speaking.\n")
 
   # Parse submissions:
-  submissions <- list.files(path = path_to_submissions,
-                            full.names = FALSE,
-                            pattern = ".csv$|.CSV$|.Csv$|.CSv$|.csV$|.cSV$|.cSV$",
-                            recursive = TRUE)
+  #tar_load(submissions_processed)
+  submissions_processed <- list.files(path = path_to_submissions,
+                                      full.names = FALSE,
+                                      pattern = ".csv$|.CSV$|.Csv$|.CSv$|.csV$|.cSV$|.cSV$",
+                                      recursive = TRUE)
 
-  Encoding(submissions) <- "utf8"
+  Encoding(submissions_processed) <- "utf8"
 
-  if (verbose) cat(paste0("Number of CSV files to be processed: ", length(submissions), "\n"))
+  if (verbose) cat(paste0("Number of CSV files to be processed: ", length(submissions_processed), "\n"))
 
   # Make sure the paths are ending with a slash:
   if (!stringr::str_detect(path_to_submissions, "/$"))
@@ -62,8 +63,8 @@ comp_error_submissions <- function(path_to_submissions = "Submissions/",
 
   # parse names and Matrikelnummers to df:
   d <-
-    tibble::tibble(id_seq = 1:length(submissions)) %>%
-    dplyr::mutate(csv_file_name = stringr::str_conv(submissions, "utf8")) %>%
+    tibble::tibble(id_seq = 1:length(submissions_processed)) %>%
+    dplyr::mutate(csv_file_name = stringr::str_conv(submissions_processed, "utf8")) %>%
     dplyr::mutate(csv_file_name = berryFunctions::convertUmlaut(csv_file_name)) %>%
     dplyr::mutate(last_name = parse_last_names(csv_file_name),
            first_name = parse_first_names(csv_file_name)) %>%
@@ -74,7 +75,7 @@ comp_error_submissions <- function(path_to_submissions = "Submissions/",
   if (verbose) print("Now counting data lines per prediction data (submission) file.")
   d2 <-
     d %>%
-    dplyr::mutate(npreds = purrr::map_dbl(submissions,
+    dplyr::mutate(npreds = purrr::map_dbl(submissions_processed,
                             ~ R.utils::countLines(paste0(path_to_submissions, .x))) - 1)
 
 
@@ -83,7 +84,7 @@ comp_error_submissions <- function(path_to_submissions = "Submissions/",
   if (verbose) print("Now extracting col names from csv file with prediction data.")
   d2a <-
     d2 %>%
-    dplyr::mutate(colnames_pred_file = purrr::map_chr(.x = submissions,
+    dplyr::mutate(colnames_pred_file = purrr::map_chr(.x = submissions_processed,
                                         .f = ~ data.table::fread(paste0(path_to_submissions, .x),
                                                                  nrows = 1) %>%
                                           names() %>%
@@ -98,7 +99,8 @@ comp_error_submissions <- function(path_to_submissions = "Submissions/",
     d2a %>%
     #slice(1) %>%
     dplyr::mutate(data = purrr::map(
-      .x = submissions,
+      .x = submissions_processed,
+      # prep_csv() is from `{teachertools}`:
       .f = ~ prep_csv(submission_file =  .x,
                       path_to_submissions = path_to_submissions,
                       path_to_test_data = path_to_test_data,
