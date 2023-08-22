@@ -13,7 +13,7 @@ Roxygen: list(markdown = TRUE)
 LazyData: true
 RoxygenNote: 7.2.3
 Imports:
-    dplyr,
+  dplyr,
     purrr,
     stringr
 Suggests: 

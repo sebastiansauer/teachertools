@@ -1,8 +1,8 @@
-#' prep_csv
+#' sanitize csv
 #'
-#' Prepares a submission csv file for subsequent computation of prediction error
+#' Sanitizes a submission csv file for subsequent computation of prediction error
 #'
-#' Takes a submission file as as input, as well as the train and test data files,
+#' Takes a submission file as as input,
 #' and irons out some glitches so that the prediction error can be computed
 #' in a subsequent step (not part of this function).
 #' Each single submissions consists of a number of submissions.
@@ -17,8 +17,9 @@
 #' If only one column is provided as submission data frame,
 #' the function assumes that the column contains the predictions. An id column is
 #' added in this case.
-#' The output variable will be renamed to "y", in order to simplify the downstream work.
-#' Any missing values in the submission will be filled with the (arithmetic) mean.
+
+#' Any missing values in the prediction will be filled with a given value,
+#' provided the argument `replace_na_preds` is not NULL.
 #' The submission does not necessarily be of a standard csv format, as
 #' `data.table::fread` is able to guess formats. However, for the train and test data file, a standard csv file is expected (comma as deliminators, US centric locale).
 #'
@@ -27,11 +28,10 @@
 #'
 #' @param submission_file name of csv file with predictions (chr)
 #' @param path_to_submissions path to submission folder with submission files (chr)
-#' @param path_to_train_data  path to train data file, regular csv file expected (chr)
-#' @param path_to_test_data path to test data file, regular csv file expected  (Chr)
+#' @param replace_na_preds  value to replace NA predictions (dbl)
 #' @param max_row how many rows should be prepared maximally (int)?
 #' @param start_id number of the first id (int)
-#' @param name_output_var name of the variable to be predicted (chr)
+#' @param alternative_name_for_pred alternative names for prediction column (str)
 #' @param name_id_var name of the id variable (chr)?
 #' @param name_pred_column name of the columns with the predictions (chr)?
 #' @param verbose more output (lgl)?
@@ -41,47 +41,34 @@
 #'
 #' @examples
 #' \dontrun{prep_csv(my_submission_file, path_train, path_test, max_row = 500, start_id = 800)}
-prep_csv <- function(submission_file,
+sanitize_csv <- function(submission_file,
                      path_to_submissions = "submissions/",
-                     path_to_train_data,
-                     path_to_test_data,
+                     replace_na_preds = NULL,
+                     alternative_name_for_pred = NULL,
                      max_row = NULL,
                      start_id = 1,
-                     name_output_var = "y",
                      name_id_var = "id",
                      name_pred_column = "pred",
                      verbose = TRUE){
 
   # in some cases, the student will fail, eg., if no data has been submitted
-  student_fails <- FALSE
+  student_fails <- NA
   comment_to_student <- "Feel free to use the control data provided to check the validity of your grade."
 
 
   if (verbose) cat("This is function `prep_csv` speaking.\n")
 
   # Make sure the paths are ending with a slash:
-  if (!stringr::str_detect(path_to_submissions, "/$"))
-    path_to_submissions <- stringr::str_c(path_to_submissions, "/")
-  if (verbose) cat(paste0("Path to submissions is: ", path_to_submissions, "\n"))
-
+  if (!is.null(path_to_submissions)) {
+    if (!stringr::str_detect(path_to_submissions, "/$"))
+      path_to_submissions <- stringr::str_c(path_to_submissions, "/")
+    if (verbose) cat(paste0("Path to submissions is: ", path_to_submissions, "\n"))
+  }
   stopifnot(start_id > 0)
 
   if (is.null(start_id)) start_id <- 1
 
 
-
-  if (verbose) {
-    cat("Now reading test (control/solution) df file.\n")
-    cat(paste0("Assuming this path/file name: ", path_to_test_data, "\n"))
-  }
-
-  # import test/solution df file:
-  #stopifnot(file.exists(path_to_test_data))  # appears not to work for remote files
-  solution_df <- readr::read_csv(path_to_test_data,
-                                 show_col_types = FALSE)
-  if (verbose) dplyr::glimpse(solution_df)
-  cat("\n")
-  stopifnot(any(class(solution_df) == "data.frame"))
 
 
 
@@ -103,10 +90,9 @@ prep_csv <- function(submission_file,
   # all names to lower:
   names(x) <- base::tolower(base::names(x))
 
+
   # remove punctuation from names of submission files:
   names(x) <- stringr::str_remove_all(names(x), '[[:punct:]]')
-
-
 
 
   # find column with predictions:
@@ -133,15 +119,16 @@ prep_csv <- function(submission_file,
       dplyr::rename((pred = prediction))
   }
 
-  # if there's a column named after the outcome var,
-  # but not column "pred":
-  if (name_output_var %in% names(x) & !(name_pred_column %in% names(x))) {
-    x <-
-      x |>
-      # ... then rename this column to "pred"
-      dplyr::rename(pred = {{name_output_var}})
-  }
+  # if there's a column named after the outcome var,  but not column "pred":
+  if (!is.null(alternative_name_for_pred)) {
 
+    if (alternative_name_for_pred %in% names(x) & !(name_pred_column %in% names(x))) {
+      x <-
+        x |>
+        # ... then rename this column to "pred"
+        dplyr::rename(pred = {{alternative_name_for_pred}})
+    }
+  }
 
   # remove the following unneeded columns:
   remove_these_cols <- c("v1", "", " ", "...1")
@@ -259,45 +246,12 @@ prep_csv <- function(submission_file,
 
 
 
-  # Rename the output variable to "y" in solution_df:
-  solution_df <-
-    solution_df |>
-    dplyr::rename(y = {{name_output_var}})
-
-
-  # add id column in solution df if not present:
-  if (!("id" %in% names(solution_df))) solution_df$id <- start_id:(start_id + nrow(solution_df) - 1)
-
-
-  # Make sure "id" is of type integer:
-  solution_df <-
-    solution_df |>
-    dplyr::mutate(id = as.integer(id))
-
-  if (!any(names(solution_df) == "y")) {
-    cat(paste0("Names of columns in solution_df: "), names(solution_df))
-    stop("`y` not among column names of solution df!")
-  }
-
-
-  # join solution data with submission data:
-  x_joined <-
-    solution_df |>
-    dplyr::select(id, y) |>
-    dplyr::left_join(x2,
-                     by = "id")
-
-
-  # make sure y is numeric, not integer:
-  if (typeof(x_joined$y) == "integer") x_joined$y <- as.numeric(x_joined$y)
-  if (typeof(x_joined$y) == "character") stop("y must not be of type `character`!")
-
-
+  # compute na statistics:
   n_na <-
     x2 |>
     dplyr::summarise(
       na_n = sum(is.na(pred)),
-      na_prop = na_n/n())
+      na_prop = na_n/dplyr::n())
 
   if (verbose) cat("Sum of NA in predictions: ", n_na$na_n, "\n")
   if (verbose) cat("Proportion of NA in predictions: ", n_na$na_prop, "\n")
@@ -310,46 +264,33 @@ prep_csv <- function(submission_file,
   }
 
 
-  # reading training data, only to get the mean y-value:
-  if (verbose) cat("Now reading train data. Expecting standard CSV.\n")
-  #stopifnot(file.exists(path_to_train_data))
-  train_df <- readr::read_csv(path_to_train_data,
-                              show_col_types = FALSE)
-  stopifnot(any(class(train_df) == "data.frame"))
-  stopifnot(any(names(train_df) == name_output_var))
 
-  # Rename outcome variable in train data to "y":
-  train_df <-
-    train_df |>
-    dplyr::rename(y = {{name_output_var}}) |>
-    dplyr::mutate(y = as.numeric(y))
+  if (!is.null(replace_na_preds)) {
+    x2 <-
+      x2 |>
+      mutate(!!name_pred_column := ifelse(is.na(!!sym(name_pred_column)), replace_na_preds, !!sym(name_pred_column)))
+  }
 
 
 
-  # x2 <-
-  #   x2 |>
-  #   dplyr::mutate(pred = tidyr::replace_na(pred, base::mean(train_df$y, na.rm = TRUE)))
+  # finalizing:
 
-
-  if (verbose) cat("Replacing NA with mean of y (the output variable).\n")
-  x_joined2 <-
-    x_joined |>
-    dplyr::mutate(pred = tidyr::replace_na(pred, base::mean(train_df$y, na.rm = TRUE)))
+  out_df <- x2
 
   if (verbose == TRUE) {
-    cat(paste0("Ncol of processed submission df: ", ncol(x_joined), "\n"))
+    cat(paste0("Ncol of processed submission df: ", ncol(out_df), "\n"))
   }
 
   if (verbose) print(paste0("Finished preprocessing: ", submission_file, "\n"))
 
 
   # Add some metadata to the results:
-  attr(x_joined2, "comments_to_student") <- comment_to_student
-  attr(x_joined2, "failed") <- student_fails
-  attr(x_joined2, "na_prop") <- n_na$na_prop[1]
+  attr(out_df, "comments_to_student") <- comment_to_student
+  attr(out_df, "failed") <- student_fails
+  attr(out_df, "na_prop") <- n_na$na_prop[1]
 
 
-  return(x_joined2)
+  return(out_df)
 }
 
 

@@ -46,9 +46,10 @@ Computes prediction error for student submissions
 }
 \details{
 Given a number of csv files with predictions (and id),
-this function returns the prediction error (such as MAE or RMSE) for each prediction
+this function returns the prediction error (such as MAE or RMSE) for each prediction (row)
 The "control data" is the test data including the "solution", ie., to variable to
-be predicted.
+be predicted. The submissions csv files will be sanitized (using \code{prep_csv})
+before further processing (however it is okay to insert sanitized csv files).
 }
 \examples{
 \dontrun{comp_error_submissions(mypath)}
