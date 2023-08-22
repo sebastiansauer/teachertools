@@ -28,10 +28,11 @@ canonicalize_df <- function(df, output_var, keep_only_numeric = TRUE, verbose = 
   col_numeric_names <- df |> dplyr::select(tidyselect::where(is.numeric)) |> names()
   col_numeric_names_flat <- stringr::str_flatten(col_numeric_names, collapse = ", ")
 
-  redundant_cols <- caret::findCorrelation(cor(df[col_numeric_names],
-                                        use = "complete.obs"),
-                                    cutoff = .9,
-                                    names = TRUE)
+  redundant_cols <- caret::findCorrelation(
+    cor(df[col_numeric_names],
+    use = "complete.obs"),
+    cutoff = .9,
+    names = TRUE)
 
   df <- df |> dplyr::select(-tidyselect::all_of(redundant_cols))
 
