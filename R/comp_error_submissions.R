@@ -3,12 +3,13 @@
 #' Computes prediction error for student submissions
 #'
 #' Given a number of csv files with predictions (and id),
-#' this function returns the prediction error (such as MAE or RMSE) for each prediction
+#' this function returns the prediction error (such as MAE or RMSE) for each prediction (row)
 #' The "control data" is the test data including the "solution", ie., to variable to
-#' be predicted.
+#' be predicted. The submissions csv files will be sanitized (using `prep_csv`)
+#' before further processing (however it is okay to insert sanitized csv files).
 #'
 #'
-#' @param path_to_submissions path  and file (CSV) with preditions (character)
+#' @param path_to_submissions path  and file (CSV) with predictions (character)
 #' @param verbose Print infos (lgl)?
 #' @param error_fun which error fun to use (mae, rmse, ...), possibly from the tidymodels ecoverse
 #' @param path_to_submissions path to submission folder with processed submission files (chr)
@@ -66,18 +67,18 @@ comp_error_submissions <- function(
 
   # parse names and Matrikelnummers to df:
   d <-
-    tibble::tibble(id_seq = 1:length(submissions_processed)) %>%
-    dplyr::mutate(csv_file_name = stringr::str_conv(submissions_processed, "utf8")) %>%
-    dplyr::mutate(csv_file_name = berryFunctions::convertUmlaut(csv_file_name)) %>%
+    tibble::tibble(id_seq = 1:length(submissions_processed)) |>
+    dplyr::mutate(csv_file_name = stringr::str_conv(submissions_processed, "utf8")) |>
+    dplyr::mutate(csv_file_name = berryFunctions::convertUmlaut(csv_file_name)) |>
     dplyr::mutate(last_name = parse_last_names(csv_file_name),
-           first_name = parse_first_names(csv_file_name)) %>%
+           first_name = parse_first_names(csv_file_name)) |>
     dplyr::mutate(id = parse_matrikelnummer(csv_file_name))
 
 
   # add nrow of preds to df:
   if (verbose) print("Now counting data lines per prediction data (submission) file.")
   d2 <-
-    d %>%
+    d |>
     dplyr::mutate(npreds = purrr::map_dbl(submissions_processed,
                             ~ R.utils::countLines(paste0(path_to_submissions, .x))) - 1)
 
@@ -86,11 +87,11 @@ comp_error_submissions <- function(
   # add column names of pred data file to df:
   if (verbose) print("Now extracting col names from csv file with prediction data.")
   d2a <-
-    d2 %>%
+    d2 |>
     dplyr::mutate(colnames_pred_file = purrr::map_chr(.x = submissions_processed,
                                         .f = ~ data.table::fread(paste0(path_to_submissions, .x),
-                                                                 nrows = 1) %>%
-                                          names() %>%
+                                                                 nrows = 1) |>
+                                          names() |>
                                           stringr::str_c(collapse = " - ")))
 
 
@@ -99,8 +100,8 @@ comp_error_submissions <- function(
   # CALL PREP_CSV:
   if (verbose) print("Now starting to parse csv files with prediction data.")
   d3 <-
-    d2a %>%
-    #slice(1) %>%
+    d2a |>
+    #slice(1) |>
     dplyr::mutate(data = purrr::map(
       .x = submissions_processed,
       # prep_csv() is from `{teachertools}`:
@@ -121,7 +122,7 @@ comp_error_submissions <- function(
   # compute predictive quality/prediction error:
   if (verbose) print("Now computing test set error for each submission.")
   d4 <-
-    d3 %>%
+    d3 |>
     dplyr::mutate(error_coef = purrr::map(data,
                                           ~error_fun(truth = y,
                                                      estimate = pred,
@@ -129,7 +130,7 @@ comp_error_submissions <- function(
   # set `error_fun <- mae` during debugging!
   options(scipen = 4)
   d5 <-
-    d4 %>%
+    d4 |>
     dplyr::mutate(error_value = purrr::map_dbl(error_coef,
                                  ".estimate"))
 

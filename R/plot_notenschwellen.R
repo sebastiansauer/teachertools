@@ -18,7 +18,7 @@ plot_notenschwellen <- function(scheme = grading_scheme2()){
 
   d <-
     data.frame(
-      prop = scheme,
+      value = scheme,
       grade = names(scheme)
     )
 
