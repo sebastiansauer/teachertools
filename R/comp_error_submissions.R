@@ -26,16 +26,17 @@
 #'
 #' @examples
 #' \dontrun{comp_error_submissions(mypath)}
-comp_error_submissions <- function(path_to_submissions = "Submissions/",
-                                   verbose = FALSE,
-                                   path_to_train_data,
-                                   path_to_test_data,
-                                   max_row = NULL,
-                                   start_id = 1,
-                                   name_output_var = "y",
-                                   name_id_var = "id",
-                                   name_pred_column = "pred",
-                                   error_fun = yardstick::mae) {
+comp_error_submissions <- function(
+    path_to_submissions = "Submissions/",
+   verbose = FALSE,
+   path_to_train_data,
+   path_to_test_data,
+   max_row = NULL,
+   start_id = 1,
+   name_output_var = "y",
+   name_id_var = "id",
+   name_pred_column = "pred",
+   error_fun = yardstick::mae) {
 
 
 
@@ -43,10 +44,12 @@ comp_error_submissions <- function(path_to_submissions = "Submissions/",
 
   # Parse submissions:
   #tar_load(submissions_processed)
-  submissions_processed <- list.files(path = path_to_submissions,
-                                      full.names = FALSE,
-                                      pattern = ".csv$|.CSV$|.Csv$|.CSv$|.csV$|.cSV$|.cSV$",
-                                      recursive = TRUE)
+  submissions_processed <- list.files(
+    path = path_to_submissions,
+    full.names = FALSE,
+    pattern = "\\.csv$",
+    ignore.case = TRUE
+    recursive = TRUE)
 
   Encoding(submissions_processed) <- "utf8"
 

@@ -16,7 +16,7 @@ grading_scheme2 <- function(min_pass = 50, output_type = "proportion") {
 
   stopifnot(output_type %in% c("percentage", "proportion"))
 
-  grade_names <- c("5" , "4", "3.7", "3.3" ,"3.0", "2.7","2.3" , "2.0",  "1.7" , "1.3","1.0")
+  grade_names <- c("5" , "4", "3.7", "3.3" ,"3.0", "2.7","2.3" , "2.0",  "1.7" , "1.3", "1.0")
 
   grade_in_points <- (100 - min_pass) / 10
 

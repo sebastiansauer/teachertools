@@ -18,15 +18,9 @@
 
 build_adj_set_answers <- function(dag_def, exposure_var, outcome_var) {
 
-
-
-
-
   get_dag_size <- function(dag){
     max(unlist(stringr::str_extract_all(dag, pattern = "\\d")))
   }
-
-
 
   dag_size <- get_dag_size(dag_def)
 

@@ -1,11 +1,18 @@
 check_missing_packages <- function(install_missing_packages = FALSE){
 
 
-files <- list.files(pattern='[.](R|rmd)$', all.files=T, recursive=T, full.names = T, ignore.case=T)
+files <- list.files(
+        pattern = '[.](r|rmd)$', # TODO: Explain what kind of files do you wont? (nm)
+        all.files = T,
+        recursive = T,
+        full.names = T,
+        ignore.case =T)
 
 # read in source code
-code=unlist(sapply(files, scan, what = 'character', quiet = TRUE))
+code <- unlist(sapply(files, scan, what = 'character', quiet = TRUE))
 
+# TODO: I know it is a bad habit, but what about "require" instead ob "library"? (nm)
+# TODO: Make a regex out of it may fill our need better! (nm)
 # retain only source code starting with library
 code <- code[grepl('^library', code, ignore.case=T)]
 code <- gsub('^library[(]', '', code)
@@ -30,6 +37,8 @@ installed_packages <- installed.packages()[, 'Package']
 
 # identify missing packages
 to_be_installed <- setdiff(uniq_packages, installed_packages)
+
+# TODO: The next part is messy! Why is the length(...)> part splitted?
 
 if (length(to_be_installed)==length(uniq_packages)) cat('All packages need to be installed.\n')
 if (length(to_be_installed)>0) {
