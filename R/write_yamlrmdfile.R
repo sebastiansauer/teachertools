@@ -12,7 +12,8 @@
 #' @param separate_ex_sol How should the question and solution be visually separated?
 #' @param verbose talkative, yes or no? (TRUE or FALSE)
 #' @param more_yaml more yaml to add which was not given in the r-exam file
-#' @param header_level how many '#' should be padded in order to indicate the header leve?
+#' @param header_level how many '#' should be padded in order to indicate the header level?
+#' @param file_suffix defaults to ".Rmd" (string), other useful option: ".qmd"
 #'
 #' @return writes an rmd file
 
@@ -31,7 +32,9 @@ write_yamlrmdfile <- function(ex_parsed,
                               separate_ex_sol = rep("</br>", 10),
                               verbose = TRUE,
                               more_yaml = NULL,
-                              header_level = 1){
+                              header_level = 1,
+                              file_suffix = ".Rmd"
+                              ){
 
   # determine the number of hashed to indicate header level:
   header_level_hashes <- rep("#", header_level) |>  stringr::str_c(collapse = "")
@@ -76,14 +79,14 @@ write_yamlrmdfile <- function(ex_parsed,
 
   # add filename
   filename_output <-
-    paste0(path_output_ex, "/", ex_parsed$ex_metadata_yaml$title,".Rmd")
+    paste0(path_output_ex, "/", ex_parsed$ex_metadata_yaml$title, file_suffix)
 
   if (!file.exists(path_output_ex))
     dir.create(path = path_output_ex)
 
   writeLines(text = yamlrmdfile, con = filename_output)
 
-  if (verbose) message(paste0("Yaml-Rmd-Exercise file has been written to output dir: ",filename_output, "\n"))
+  if (verbose) message(paste0("Yaml-Md-Exercise file has been written to output dir: ",filename_output, "\n"))
 
   return(yamlrmdfile)
 }

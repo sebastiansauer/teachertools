@@ -1,6 +1,10 @@
 # teachertools (development version)
 
 
+# 0.4.0.9000
+
+* Now qmd files as outlet for `render_exs` are supported.
+
 # 0.3.0.9000
 
 

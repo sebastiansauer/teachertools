@@ -2,7 +2,7 @@
 #'
 #' Parse r-exams exercise file
 #'
-#' Parses the follwing parts of an r-exam file: 1. metadata, 2. pre-question part,
+#' Parses the following parts of an r-exam file: 1. metadata, 2. pre-question part,
 #' 3. question, 4. solution. The metadata will be converted to regular yaml.
 #'
 #'
@@ -62,8 +62,8 @@ parse_examfile <- function(examfile,
     ex_str[start_pos:length(ex_str)] |>
     magrittr::extract(-c(1,2))
 
-  title <- stringr::str_extract(examfile, "([^/]+$)") |>
-    stringr::str_remove("\\.Rmd")
+  title <- stringr::str_extract(examfile, "([^/]+$)") |>  # The regular expression "([^/]+$)" is used to match and capture text at the end of a string that does not contain a forward slash ("/")
+    stringr::str_remove("\\..{2,3}$")  # removes file suffix, assumes at least 1 character after dot, eg., "file.rmd" or "file.qmd"
 
   # remove backticks from metadata, as it cannot be parsed:
   ex_metadata_clean <- stringr::str_remove_all(ex_metadata, "`")

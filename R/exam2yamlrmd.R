@@ -13,8 +13,9 @@
 #' @param verbose talkative, yes or no? (TRUE or FALSE)
 #' @param more_yaml more yaml to add which was not given in the r-exam file
 #' @param header_level how many '#' should be padded in order to indicate the header leve?
+#' @param file_suffix defaults to ".Rmd" (string), other useful option: ".qmd"
 #'
-#' @return writes an rmd file
+#' @return writes an markdown file
 #' @export
 #'
 #' @examples
@@ -36,7 +37,8 @@ exam2yamlrmd <- function(examfile,
                          separate_ex_sol = rep("</br>", 10),
                          more_yaml = NULL,
                          verbose = TRUE,
-                         header_level = 1){
+                         header_level = 1,
+                         file_suffix = ".Rmd"){
   # This function reads a R/exams exercise file and converts it to a yaml-headed Rmd file.
 
   # step 1: parse the exam file
@@ -51,7 +53,8 @@ exam2yamlrmd <- function(examfile,
                     print_categories,
                     separate_ex_sol,
                     verbose = verbose,
-                    header_level)
+                    header_level,
+                    file_suffix = file_suffix)
 
   return(out)
 }

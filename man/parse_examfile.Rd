@@ -18,7 +18,7 @@ list with the parts of the exercise file
 Parse r-exams exercise file
 }
 \details{
-Parses the follwing parts of an r-exam file: 1. metadata, 2. pre-question part,
+Parses the following parts of an r-exam file: 1. metadata, 2. pre-question part,
 3. question, 4. solution. The metadata will be converted to regular yaml.
 }
 \examples{

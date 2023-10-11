@@ -21,5 +21,5 @@ Gives 1 bonuspoint to exercises which have been \emph{wrongly} answered
 item_vec <- c("a" = 1, "b" = 0, "c" = 0, "d" = 1)
 bonuspoints(item_vec)
 bonuspoints(item_vec, return_type = "01")
-bonuspoints(item_vec, return_type = "02")
+bonuspoints(item_vec, return_type = "name")
 }

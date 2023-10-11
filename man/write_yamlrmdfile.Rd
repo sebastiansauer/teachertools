@@ -12,7 +12,8 @@ write_yamlrmdfile(
   separate_ex_sol = rep("</br>", 10),
   verbose = TRUE,
   more_yaml = NULL,
-  header_level = 1
+  header_level = 1,
+  file_suffix = ".Rmd"
 )
 }
 \arguments{
@@ -30,7 +31,9 @@ write_yamlrmdfile(
 
 \item{more_yaml}{more yaml to add which was not given in the r-exam file}
 
-\item{header_level}{how many '#' should be padded in order to indicate the header leve?}
+\item{header_level}{how many '#' should be padded in order to indicate the header level?}
+
+\item{file_suffix}{defaults to ".Rmd" (string), other useful option: ".qmd"}
 }
 \value{
 writes an rmd file

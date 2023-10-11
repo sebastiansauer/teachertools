@@ -19,7 +19,9 @@ render_exs(
   output_name = NULL,
   prime_factor = 1,
   my_edir = "exercises/sebastiansauer",
+  qmd = FALSE,
   verbose = FALSE,
+  file_suffix = ".Rmd",
   ...
 )
 }
@@ -46,6 +48,8 @@ render_exs(
 
 \item{verbose}{(FALSE) print out details}
 
+\item{file_suffix}{defaults to ".Rmd" (string), other useful option: ".qmd"}
+
 \item{html}{(TRUE) render to HTML format using a simple stylesheet?}
 
 \item{pdf_print}{(TRUE) print from HTML to pdf?}
@@ -57,6 +61,9 @@ nothing of importance, but files are written
 }
 \description{
 Renders R/exams exercises file to an output format such as html.
+}
+\details{
+\code{file_suffix} must be a string of length 2 or 3.
 }
 \examples{
 \dontrun{render_exs(my_exs)}

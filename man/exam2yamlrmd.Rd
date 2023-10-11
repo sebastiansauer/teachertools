@@ -12,7 +12,8 @@ exam2yamlrmd(
   separate_ex_sol = rep("</br>", 10),
   more_yaml = NULL,
   verbose = TRUE,
-  header_level = 1
+  header_level = 1,
+  file_suffix = ".Rmd"
 )
 }
 \arguments{
@@ -31,9 +32,11 @@ exam2yamlrmd(
 \item{verbose}{talkative, yes or no? (TRUE or FALSE)}
 
 \item{header_level}{how many '#' should be padded in order to indicate the header leve?}
+
+\item{file_suffix}{defaults to ".Rmd" (string), other useful option: ".qmd"}
 }
 \value{
-writes an rmd file
+writes an markdown file
 }
 \description{
 Converts r-exam File to yaml-headed RMD file

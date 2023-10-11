@@ -48,7 +48,7 @@ comp_error_submissions <- function(
     path = path_to_submissions,
     full.names = FALSE,
     pattern = "\\.csv$",
-    ignore.case = TRUE
+    ignore.case = TRUE,
     recursive = TRUE)
 
   Encoding(submissions_processed) <- "utf8"

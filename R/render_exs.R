@@ -3,6 +3,8 @@
 #'
 #' Renders R/exams exercises file to an output format such as html.
 #'
+#' `file_suffix` must be a string of length 2 or 3.
+#'
 #' @param exs list of file name of exercises to be rendered (string)
 #' @param thema_nr (optinal) Should a number be suffixed to the resulting exercise file? (string)
 #' @param render_moodle (FALSE) render to Moodle format?
@@ -16,6 +18,7 @@
 #' @param output_name (NULL, optional) an optional output name of the resulting file
 #' @param prime_factor (1) use different primes for the seeds (integer)
 #' @param my_edir path where the exercise file can be found (string)
+#' @param file_suffix defaults to ".Rmd" (string), other useful option: ".qmd"
 #' @param verbose (FALSE) print out details
 #'
 #' @return nothing of importance, but files are written
@@ -38,7 +41,9 @@ render_exs <- function(exs,
                        output_name = NULL,
                        prime_factor = 1,
                        my_edir = "exercises/sebastiansauer",
+                       qmd = FALSE,
                        verbose = FALSE,
+                       file_suffix = ".Rmd",
                        ...) {
 
   # output: rendered exercises in different formats (html with/without solutions, pdf print from html)
@@ -230,7 +235,8 @@ render_exs <- function(exs,
     for (i in seq_along(exs)){
       exam2yamlrmd(examfile = exs_w_path[i],
                    path_output = output_path,
-                   print_categories = TRUE)
+                   print_categories = TRUE,
+                   file_suffix = file_suffix)
     }
 
 
