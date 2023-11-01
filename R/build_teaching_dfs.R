@@ -80,4 +80,10 @@ d_df <-
 )
 
 
-write.csv(d_df, "data/teaching_df.csv")
+d_df2 <-
+    d_df |>
+    mutate(Package = stringr::str_remove(source,
+                                         "https://vincentarelbundock.github.io/Rdatasets/csv/") |>
+             str_remove("/\\w+\\.csv$"))
+
+write.csv(d_df2, "data/teaching_df.csv")
