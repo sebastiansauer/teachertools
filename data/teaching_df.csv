@@ -1,0 +1,13 @@
+datasets_names,main_var,num_vars_count,source,doc,Package
+mtcars,mpg,11,https://vincentarelbundock.github.io/Rdatasets/csv/datasets/mtcars.csv,https://vincentarelbundock.github.io/Rdatasets/doc/datasets/mtcars.html,datasets
+penguins,bill_length_mm,5,https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv,https://vincentarelbundock.github.io/Rdatasets/doc/palmerpenguins/penguins.html,palmerpenguins
+tips,tip,3,https://vincentarelbundock.github.io/Rdatasets/csv/reshape2/tips.csv,https://vincentarelbundock.github.io/Rdatasets/doc/reshape2/tips.html,reshape2
+gtcars,msrp,8,https://vincentarelbundock.github.io/Rdatasets/csv/gt/gtcars.csv,https://vincentarelbundock.github.io/Rdatasets/doc/gt/gtcars.html,gt
+msleep,awake,5,https://vincentarelbundock.github.io/Rdatasets/csv/ggplot2/msleep.csv,https://vincentarelbundock.github.io/Rdatasets/doc/ggplot2/msleep.html,ggplot2
+Boston,medv,12,https://vincentarelbundock.github.io/Rdatasets/csv/MASS/Boston.csv,https://vincentarelbundock.github.io/Rdatasets/doc/MASS/Boston.html,MASS
+TeachingRatings,eval,6,https://vincentarelbundock.github.io/Rdatasets/csv/AER/TeachingRatings.csv,https://vincentarelbundock.github.io/Rdatasets/doc/AER/TeachingRatings.html,AER
+iris,Sepal.Length,4,https://vincentarelbundock.github.io/Rdatasets/csv/datasets/iris.csv,https://vincentarelbundock.github.io/Rdatasets/doc/datasets/iris.html,datasets
+airquality,Ozone,6,https://vincentarelbundock.github.io/Rdatasets/csv/datasets/airquality.csv,https://vincentarelbundock.github.io/Rdatasets/doc/datasets/airquality.html,datasets
+education,Y,5,https://vincentarelbundock.github.io/Rdatasets/csv/robustbase/education.csv,https://vincentarelbundock.github.io/Rdatasets/doc/robustbase/education.html,robustbase
+Affairs,affairs,7,https://vincentarelbundock.github.io/Rdatasets/csv/AER/Affairs.csv,https://vincentarelbundock.github.io/Rdatasets/doc/AER/Affairs.html,AER
+CASchools,math,11,https://vincentarelbundock.github.io/Rdatasets/csv/AER/CASchools.csv,https://vincentarelbundock.github.io/Rdatasets/doc/AER/CASchools.html,AER
