@@ -12,7 +12,7 @@
 #' @export
 #'
 #' @examples
-out <- get_datasets(d_filter = "openintro")
+#' out <- get_datasets(d_filter = "openintro")
 
 get_datasets <- function(d_path = NULL, d_filter = NULL) {
 
