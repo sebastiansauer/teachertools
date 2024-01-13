@@ -23,6 +23,6 @@ Bonus determines whether the student is awarded some bonus.
 ATTENTION: This function is hardcoded to suit the HS Ansbach grading method!
 }
 \examples{
-`grade_essay(d)`
+`grade_essay_hsan(d)`
 
 }

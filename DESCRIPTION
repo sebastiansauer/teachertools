@@ -1,7 +1,7 @@
 Package: teachertools
 Type: Package
 Title: Provides Tools for Teachers Such as Grading, Examing and Publication 
-Version: 0.4.0.9000
+Version: 0.6.0.9000
 Authors@R: 
     person("Sebastian", "Sauer", , "sebastiansauer1@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-1515-8348"))

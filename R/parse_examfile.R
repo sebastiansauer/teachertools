@@ -34,15 +34,17 @@ parse_examfile <- function(examfile,
   # get pre-question:
 
   start_pos <- 1
-  end_pos <- which(ex_str == "Question")
+  end_pos <- which(ex_str %in% c("Question", "Aufgabe"))
+  stopifnot(end_pos > 1)
   ex_pre_question <-
     ex_str[1:(end_pos-1)]  # ends when 'Question' as new header appears
 
 
   # get question:
 
-  start_pos <- which(ex_str == "Question")
-  end_pos <- which(ex_str == "Solution")
+  start_pos <-  which(ex_str %in% c("Question", "Aufgabe"))
+  end_pos <- which(ex_str %in% c("Solution", "Lösung"))
+  if (end_pos < start_pos + 2) stop("Did not find Question and Solution tags properly.")
   ex_question <-
     ex_str[(start_pos+3):(end_pos-1)]
 

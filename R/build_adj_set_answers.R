@@ -24,7 +24,7 @@ build_adj_set_answers <- function(dag_def, exposure_var, outcome_var) {
 
   dag_size <- get_dag_size(dag_def)
 
-  # compute minimal adjustment set:
+  # returns minimal adjustment set (as symbol, not string):
   adj <- dagitty::adjustmentSets(dag_def,
                         exposure = exposure_var,
                         outcome = outcome_var)
@@ -42,6 +42,8 @@ build_adj_set_answers <- function(dag_def, exposure_var, outcome_var) {
   no_solution <- "/"
   empty_set <- c("{ }")
   all_sets_size1 <- paste0("{ x", 1:dag_size, " }")
+
+  # all possible solutions consisting of 2 variables (to be adjusted for):
   all_sets_size2 <- outer(variables, variables, FUN = stringr::str_c, sep = ", ")
 
   all_sets_size2_unique <- all_sets_size2[upper.tri(all_sets_size2)]
@@ -64,6 +66,11 @@ build_adj_set_answers <- function(dag_def, exposure_var, outcome_var) {
   adj_string_first <- purrr::map_chr(adj, stringr::str_c, collapse= " , ")
   adj_string <- purrr::map_chr(adj_string_first, ~paste0("{ ",.x, " }"))
 
+  # if the solution is "{  }", replace it with "{ }":
+  adj_string <- stringr::str_replace_all(adj_string,pattern = "\\s{2,}", replacement = " ")
+  # this is to prevent multiple similar soltion optsions such "{ }" and "{  }"
+
+
   adj_string_shortest <-
     adj_string[shortest_adj_set_nr]
 
@@ -75,7 +82,7 @@ build_adj_set_answers <- function(dag_def, exposure_var, outcome_var) {
 
   incorrect_z_set <- setdiff(all_sets_size0and1and2, adj_string)
 
-  if (length(adj) == 0) sol[1] <- "/"
+  if (length(adj) == 0) sol[1] <- "/"  # no adjustment possible
   if (length(adj) != 0) sol[1] <- adj_string_shortest  # one correct solution
 
   sol[2:5] <- sample(incorrect_z_set, 4) # incorrect solution
@@ -88,6 +95,12 @@ build_adj_set_answers <- function(dag_def, exposure_var, outcome_var) {
       is_correct = c(TRUE, F, F, F, F)
     )
   sol_df <- dplyr::sample_n(sol_df, size = nrow(sol_df))  # shuffle it, so that the correct solution comes to a random place
+
+  #  check if there are no ambiguous solutions such as "{ }" and "{  }":
+  if (sum(stringr::str_detect(sol_df$sol, "\\{\\s*\\}")) > 1) stop("multiple, ambiguous solutions!")
+
+  return(sol_df)
+
 }
 
 

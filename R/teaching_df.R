@@ -23,7 +23,8 @@ teaching_df <- function(df = NULL, canonicalize = TRUE, verbose = TRUE, ...) {
 
   #if (!is.null(df)) assertthat::assert_that(typeof(df) == "character", msg = "df must be of type character")
 
-  d_df <- read.csv("data/teaching_df.csv")
+  data(teaching_data)
+  d_df <- teaching_data  # list of data sets for teaching
 
   if (is.null(df)) {
     return(d_df)  # return only overview of data frames

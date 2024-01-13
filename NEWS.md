@@ -1,6 +1,14 @@
 # teachertools (development version)
 
 
+# 0.6.0.9000
+
+* Computing and visualizing two-by-two assocation
+
+# 0.5.0.9000
+
+* Dataset "teaching_data" added
+
 # 0.4.0.9000
 
 * Now qmd files as outlet for `render_exs` are supported.

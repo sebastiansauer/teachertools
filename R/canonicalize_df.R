@@ -21,7 +21,7 @@ canonicalize_df <- function(df, output_var, keep_only_numeric = TRUE, verbose = 
   if ("sleep_total" %in% names(df)) df <- df |>  dplyr::select(-sleep_total)
 
   # rm ID cols:
-  cols_wo_id <- setdiff(names(df), c("X", "...1", "ID", "id"))  # exclude ID vars
+  cols_wo_id <- setdiff(names(df), c("X", "...1", "ID", "id", "rownames"))  # exclude ID vars
   df <- df |> dplyr::select(tidyselect::all_of(cols_wo_id))
 
   # rm highly correlated cols:

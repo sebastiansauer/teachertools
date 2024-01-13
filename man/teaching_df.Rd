@@ -19,5 +19,5 @@ and should not be too complex or large.
 Note that internet access is neccessary.
 }
 \examples{
-\dontrun{teaching_df(df == "tips")}
+\dontrun{teaching_df(df = "tips")}
 }
