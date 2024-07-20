@@ -10,7 +10,7 @@ prep_csv(
   path_to_train_data,
   path_to_test_data,
   max_row = NULL,
-  start_id = 1,
+  start_id = 1L,
   name_output_var = "y",
   name_id_var = "id",
   name_pred_column = "pred",
@@ -24,19 +24,19 @@ prep_csv(
 
 \item{path_to_train_data}{path to train data file, regular csv file expected (chr)}
 
-\item{path_to_test_data}{path to test data file, regular csv file expected  (Chr)}
+\item{path_to_test_data}{path to CONTROL (test) data file (with solution/y), regular csv file expected  (Chr)}
 
-\item{max_row}{how many rows should be prepared maximally (int)?}
+\item{max_row}{how many rows should be prepared maximally (int, defaults to NULL)?}
 
-\item{start_id}{number of the first id (int)}
+\item{start_id}{number of the first id (int, defaults to 1)}
 
-\item{name_output_var}{name of the variable to be predicted (chr)}
+\item{name_output_var}{name of the variable to be predicted (chr, defaults to "y")}
 
-\item{name_id_var}{name of the id variable (chr)?}
+\item{name_id_var}{name of the id variable (chr, defaults to "id")?}
 
-\item{name_pred_column}{name of the columns with the predictions (chr)?}
+\item{name_pred_column}{name of the columns with the predictions (chr, defaults to "pred")?}
 
-\item{verbose}{more output (lgl)?}
+\item{verbose}{more output (lgl, defaults to TRUE)?}
 }
 \value{
 sanitized data frame of individual submission. See details.
@@ -65,6 +65,7 @@ The output variable will be renamed to "y", in order to simplify the downstream 
 Any missing values in the submission will be filled with the (arithmetic) mean.
 The submission does not necessarily be of a standard csv format, as
 \code{data.table::fread} is able to guess formats. However, for the train and test data file, a standard csv file is expected (comma as deliminators, US centric locale).
+Column names of submissions files are transformed to lower case.
 }
 
 The function returns a data frame with the the columns mentioned above (id, pred).

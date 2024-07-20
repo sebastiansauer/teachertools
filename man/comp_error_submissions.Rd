@@ -6,7 +6,7 @@
 \usage{
 comp_error_submissions(
   path_to_submissions = "Submissions/",
-  verbose = FALSE,
+  verbose = TRUE,
   path_to_train_data,
   path_to_test_data,
   max_row = NULL,
@@ -14,29 +14,29 @@ comp_error_submissions(
   name_output_var = "y",
   name_id_var = "id",
   name_pred_column = "pred",
-  error_fun = yardstick::mae
+  error_fun = yardstick::rmse
 )
 }
 \arguments{
 \item{path_to_submissions}{path to submission folder with processed submission files (chr)}
 
-\item{verbose}{Print infos (lgl)?}
+\item{verbose}{more output (lgl, defaults to TRUE)?}
 
 \item{path_to_train_data}{path to train data (chr)}
 
-\item{max_row}{how many rows should be prepared maximally (int)?}
+\item{path_to_test_data}{path to CONTROL (test) data file (with solution/y), regular csv file expected  (Chr)}
 
-\item{start_id}{number of the first id (int)}
+\item{max_row}{how many rows should be prepared maximally (int, defaults to NULL)?}
 
-\item{name_output_var}{name of the variable to be predicted (chr)}
+\item{start_id}{number of the first id (int, defaults to 1)}
 
-\item{name_id_var}{name of the id variable (chr)?}
+\item{name_output_var}{name of the variable to be predicted (chr, defaults to "y")}
 
-\item{name_pred_column}{name of the columns with the predictions (chr)?}
+\item{name_id_var}{name of the id variable (chr, defaults to "id")?}
 
-\item{error_fun}{which error fun to use (mae, rmse, ...), possibly from the tidymodels ecoverse}
+\item{name_pred_column}{name of the columns with the predictions (chr, defaults to "pred")?}
 
-\item{path_to_control_data}{path to test data (with y values) (Chr)}
+\item{error_fun}{which error fun to use (mae, rmse, ..., defaults to rmse), possibly from the tidymodels ecoverse}
 }
 \value{
 tibble with prediction error value

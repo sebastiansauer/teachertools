@@ -1,6 +1,10 @@
 # teachertools (development version)
 
 
+# 0.6.1.9000
+
+* Fix bug in `build_adj_set_answers`
+
 # 0.6.0.9000
 
 * Computing and visualizing two-by-two assocation

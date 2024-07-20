@@ -21,6 +21,7 @@
 #' Any missing values in the submission will be filled with the (arithmetic) mean.
 #' The submission does not necessarily be of a standard csv format, as
 #' `data.table::fread` is able to guess formats. However, for the train and test data file, a standard csv file is expected (comma as deliminators, US centric locale).
+#' Column names of submissions files are transformed to lower case.
 #'
 #' The function returns a data frame with the the columns mentioned above (id, pred).
 #' The returned dataframes contains some attributes: (1) "comments_to_student", where hints about gross errors are mentioned, (2) "fail" to indicate pass/fail of the test, here if gross errors (eg., no data submitted) are present, (3), "na_prop": the proportion of na in the prediction column.
@@ -28,13 +29,13 @@
 #' @param submission_file name of csv file with predictions (chr)
 #' @param path_to_submissions path to submission folder with submission files (chr)
 #' @param path_to_train_data  path to train data file, regular csv file expected (chr)
-#' @param path_to_test_data path to test data file, regular csv file expected  (Chr)
-#' @param max_row how many rows should be prepared maximally (int)?
-#' @param start_id number of the first id (int)
-#' @param name_output_var name of the variable to be predicted (chr)
-#' @param name_id_var name of the id variable (chr)?
-#' @param name_pred_column name of the columns with the predictions (chr)?
-#' @param verbose more output (lgl)?
+#' @param path_to_test_data path to CONTROL (test) data file (with solution/y), regular csv file expected  (Chr)
+#' @param max_row how many rows should be prepared maximally (int, defaults to NULL)?
+#' @param start_id number of the first id (int, defaults to 1)
+#' @param name_output_var name of the variable to be predicted (chr, defaults to "y")
+#' @param name_id_var name of the id variable (chr, defaults to "id")?
+#' @param name_pred_column name of the columns with the predictions (chr, defaults to "pred")?
+#' @param verbose more output (lgl, defaults to TRUE)?
 #'
 #' @return sanitized data frame of individual submission. See details.
 #' @export
@@ -46,13 +47,13 @@ prep_csv <- function(submission_file,
                      path_to_train_data,
                      path_to_test_data,
                      max_row = NULL,
-                     start_id = 1,
+                     start_id = 1L,
                      name_output_var = "y",
                      name_id_var = "id",
                      name_pred_column = "pred",
                      verbose = TRUE){
 
-  # in some cases, the student will fail, eg., if no data has been submitted
+  # in some cases, the student will fail, eg., if no data has been submitted:
   student_fails <- FALSE
   comment_to_student <- "Feel free to use the control data provided to check the validity of your grade."
 

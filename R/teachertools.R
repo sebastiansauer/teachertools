@@ -22,6 +22,6 @@
 #' similar stuff is provided.
 #'
 #'
-#' @docType package
+#' @docType _PACKAGE
 #' @name teachertools
 NULL

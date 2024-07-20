@@ -10,25 +10,26 @@
 #'
 #'
 #' @param path_to_submissions path  and file (CSV) with predictions (character)
-#' @param verbose Print infos (lgl)?
-#' @param error_fun which error fun to use (mae, rmse, ...), possibly from the tidymodels ecoverse
+#' @param error_fun which error fun to use (mae, rmse, ..., defaults to rmse), possibly from the tidymodels ecoverse
 #' @param path_to_submissions path to submission folder with processed submission files (chr)
 #' @param path_to_train_data  path to train data (chr)
-#' @param path_to_control_data path to test data (with y values) (Chr)
-#' @param max_row how many rows should be prepared maximally (int)?
-#' @param start_id number of the first id (int)
-#' @param name_output_var name of the variable to be predicted (chr)
-#' @param name_id_var name of the id variable (chr)?
-#' @param name_pred_column name of the columns with the predictions (chr)?
-
+#' @param path_to_test_data path to CONTROL (test) data file (with solution/y), regular csv file expected  (Chr)
+#' @param max_row how many rows should be prepared maximally (int, defaults to NULL)?
+#' @param max_row how many rows should be prepared maximally (int, defaults to NULL)?
+#' @param start_id number of the first id (int, defaults to 1)
+#' @param name_output_var name of the variable to be predicted (chr, defaults to "y")
+#' @param name_id_var name of the id variable (chr, defaults to "id")?
+#' @param name_pred_column name of the columns with the predictions (chr, defaults to "pred")?
+#' @param verbose more output (lgl, defaults to TRUE)?
+#'
 #' @return tibble with prediction error value
 #' @export
 #'
 #' @examples
 #' \dontrun{comp_error_submissions(mypath)}
 comp_error_submissions <- function(
-    path_to_submissions = "Submissions/",
-   verbose = FALSE,
+   path_to_submissions = "Submissions/",
+   verbose = TRUE,
    path_to_train_data,
    path_to_test_data,
    max_row = NULL,
@@ -36,7 +37,7 @@ comp_error_submissions <- function(
    name_output_var = "y",
    name_id_var = "id",
    name_pred_column = "pred",
-   error_fun = yardstick::mae) {
+   error_fun = yardstick::rmse) {
 
 
 

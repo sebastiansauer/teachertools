@@ -4,10 +4,12 @@
 \alias{plot_grade_distribution}
 \title{plot_grade_distribution}
 \usage{
-plot_grade_distribution(d_grades)
+plot_grade_distribution(d_grades, plot_title = "Notenverteilung")
 }
 \arguments{
 \item{d_grades}{df with grades, particularly a column \code{grade} containing the grades}
+
+\item{plot_title}{plot title (string, defaults to "Notenverteilung")}
 }
 \value{
 ggplot2 object

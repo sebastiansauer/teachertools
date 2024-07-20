@@ -67,8 +67,17 @@ build_adj_set_answers <- function(dag_def, exposure_var, outcome_var) {
   adj_string <- purrr::map_chr(adj_string_first, ~paste0("{ ",.x, " }"))
 
   # if the solution is "{  }", replace it with "{ }":
-  adj_string <- stringr::str_replace_all(adj_string,pattern = "\\s{2,}", replacement = " ")
+  adj_string <- stringr::str_replace_all(adj_string,
+                                         pattern = "\\s{2,}",
+                                         replacement = " ")
   # this is to prevent multiple similar soltion optsions such "{ }" and "{  }"
+
+  # change solutions like " "{ x1 , x2 }" to "{ x1, x2 }":
+  adj_string <- stringr::str_replace_all(adj_string,
+                                         pattern = "\ ,",
+                                         replacement = ",")
+  # this is to prevent double solutions with only differ by a space before the comma
+
 
 
   adj_string_shortest <-

@@ -5,6 +5,7 @@
 #' Plots Distribution of Grades
 #'
 #' @param d_grades df with grades, particularly a column `grade` containing the grades
+#' @param plot_title plot title (string, defaults to "Notenverteilung")
 #'
 #' @return ggplot2 object
 #' @export
@@ -12,7 +13,7 @@
 #' @examples
 #' d_grades <- data.frame(grade = sample(1:5, size = 30, replace = TRUE))
 #' plot_grade_distribution(d_grades)
-plot_grade_distribution <- function(d_grades){
+plot_grade_distribution <- function(d_grades, plot_title = "Notenverteilung"){
 
   if (is.null(nrow(d_grades[d_grades$grade <= 4, ]))) bestehensquote <- 1
       else bestehensquote <-
@@ -32,7 +33,7 @@ plot_grade_distribution <- function(d_grades){
                       y = Inf,
                       hjust = 0.5, vjust = 1,
                       label = base::paste0("Mean: ", grade_mean)) +
-    ggplot2::labs(title = "distribution",
+    ggplot2::labs(title = plot_title,
          caption = base::paste0("n = ", base::nrow(d_grades), "; proportion pass/fail: ", bestehensquote, "/", 1 - bestehensquote),
          x = "grades",
          y = "n") +
