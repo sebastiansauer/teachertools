@@ -108,6 +108,12 @@ build_adj_set_answers <- function(dag_def, exposure_var, outcome_var) {
   #  check if there are no ambiguous solutions such as "{ }" and "{  }":
   if (sum(stringr::str_detect(sol_df$sol, "\\{\\s*\\}")) > 1) stop("multiple, ambiguous solutions!")
 
+  # check if there are no duplicates:
+
+  dups <- duplicated(sol_df$sol)
+  has_dups <- any(dups)
+  if (has_dups) stop("There are duplicates in the solution vector in sol_df$sol. Duplicates are not allowed.")
+
   return(sol_df)
 
 }
