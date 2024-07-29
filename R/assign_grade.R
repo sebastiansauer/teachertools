@@ -4,6 +4,10 @@
 #' assigned given a grading scheme which acts as a function ascribing the
 #' mapping from proints to grade
 #'
+#' The dataframe `d` is expected to have a variable `var` which provides the
+#' performance data to be graded.
+#' `grading_scheme` is a named numeric vector such as "`4` == .5", etc.
+#'
 #' @param d data frame
 #' @param grading_scheme which grading scheme to use
 #' @param var variable for which a grade should be assigned
@@ -24,6 +28,8 @@ assign_grade <- function(
     number_of_grades = 11
     ) {
 
+
+  # if no grading scheme is provided by the user, use this one:
   if (is.null(grading_scheme)) {
     grading_scheme <- c("5"   = 0,
                         "4"   = .45,
