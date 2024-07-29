@@ -7,6 +7,9 @@
 #' The dataframe `d` is expected to have a variable `var` which provides the
 #' performance data to be graded.
 #' `grading_scheme` is a named numeric vector such as "`4` == .5", etc.
+#' `failing_grades` is defaulted with `c("5", "4.3", "4.7")`.
+#' `number_of_grade` is defaulted with `11` (ie., grades from 1.0, 1.3, ...4, 5)
+#' `var` is defaulted with `"correct_prop"`
 #'
 #' @param d data frame
 #' @param grading_scheme which grading scheme to use
@@ -45,7 +48,10 @@ assign_grade <- function(
   }
   stopifnot(length(grading_scheme) == number_of_grades)
 
-  d$grade_f <- cut(
+
+  # cut the target (performance) variable in bins,
+  # according to the number of grades and according to the grading scheme:
+    d$grade_f <- cut(
     d[[var]],
     breaks = c(grading_scheme, 1.01),
     labels = names(grading_scheme),
