@@ -6,7 +6,7 @@
 #' and irons out some glitches so that the prediction error can be computed
 #' in a subsequent step (not part of this function).
 #' Each single submissions consists of a number of submissions.
-#' The submossions are expected to be a data frame with two columns:
+#' The submssions are expected to be a data frame with two columns:
 #' 1) id: the unique id of each prediction (integer, positive)
 #' 2) pred: the predicted value for each instance
 #' Note that the id must be shared knowledge,
@@ -43,7 +43,6 @@
 #' \dontrun{prep_csv(my_submission_file, path_train, path_test, max_row = 500, start_id = 800)}
 prep_csv2 <- function(submission_file,
                      path_to_submissions = "submissions/",
-                     path_to_test_data,
                      max_row = NULL,
                      start_id = 1L,
                      name_output_var = "y",
@@ -68,19 +67,19 @@ prep_csv2 <- function(submission_file,
   if (is.null(start_id)) start_id <- 1
 
 
-
-  if (verbose) {
-    cat("Now reading test (control/solution) df file.\n")
-    cat(paste0("Assuming this path/file name: ", path_to_test_data, "\n"))
-  }
-
-  # import test/solution df file:
-  #stopifnot(file.exists(path_to_test_data))  # appears not to work for remote files
-  solution_df <- readr::read_csv(path_to_test_data,
-                                 show_col_types = FALSE)
-  if (verbose) dplyr::glimpse(solution_df)
-  cat("\n")
-  stopifnot(any(class(solution_df) == "data.frame"))
+#
+#   if (verbose) {
+#     cat("Now reading test (control/solution) df file.\n")
+#     cat(paste0("Assuming this path/file name: ", path_to_test_data, "\n"))
+#   }
+#
+#   # import test/solution df file:
+#   #stopifnot(file.exists(path_to_test_data))  # appears not to work for remote files
+#   solution_df <- readr::read_csv(path_to_test_data,
+#                                  show_col_types = FALSE)
+#   if (verbose) dplyr::glimpse(solution_df)
+#   cat("\n")
+#   stopifnot(any(class(solution_df) == "data.frame"))
 
 
 
@@ -264,41 +263,41 @@ prep_csv2 <- function(submission_file,
 
 
 
-  Rename the output variable to "y" in solution_df:
-  solution_df <-
-    solution_df |>
-    dplyr::rename(y = {{name_output_var}})
+  # Rename the output variable to "y" in solution_df:
+  # solution_df <-
+  #   solution_df |>
+  #   dplyr::rename(y = {{name_output_var}})
 
 
-  add id column in solution df if not present:
-  if (!("id" %in% names(solution_df))) solution_df$id <- start_id:(start_id + nrow(solution_df) - 1)
+  # add id column in solution df if not present:
+  # if (!("id" %in% names(solution_df))) solution_df$id <- start_id:(start_id + nrow(solution_df) - 1)
 
 
   # Make sure "id" is of type integer:
-  solution_df <-
-    solution_df |>
-    dplyr::mutate(id = as.integer(id))
-
-  if (!any(names(solution_df) == "y")) {
-    cat(paste0("Names of columns in solution_df: "), names(solution_df))
-    stop("`y` not among column names of solution df!")
-  }
-
-
-  # join solution data with submission data:
-  x_joined <-
-    solution_df |>
-    dplyr::select(id, y) |>
-    dplyr::left_join(x2,
-                     by = "id")
-
-
-  # make sure y is numeric, not integer:
-  if (typeof(x_joined$y) == "integer") x_joined$y <- as.numeric(x_joined$y)
-  if (typeof(x_joined$y) == "character") stop("y must not be of type `character`!")
-
-
-  # this is the returned object (if not NAs are replaced by mean):
+  # solution_df <-
+  #   solution_df |>
+  #   dplyr::mutate(id = as.integer(id))
+  #
+  # if (!any(names(solution_df) == "y")) {
+  #   cat(paste0("Names of columns in solution_df: "), names(solution_df))
+  #   stop("`y` not among column names of solution df!")
+  # }
+  #
+  #
+  # # join solution data with submission data:
+  # x_joined <-
+  #   solution_df |>
+  #   dplyr::select(id, y) |>
+  #   dplyr::left_join(x2,
+  #                    by = "id")
+  #
+  #
+  # # make sure y is numeric, not integer:
+  # if (typeof(x_joined$y) == "integer") x_joined$y <- as.numeric(x_joined$y)
+  # if (typeof(x_joined$y) == "character") stop("y must not be of type `character`!")
+  #
+  #
+  # # this is the returned object (if not NAs are replaced by mean):
   out <- x2
 
   n_na <-

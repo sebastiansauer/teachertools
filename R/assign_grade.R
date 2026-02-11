@@ -5,7 +5,7 @@
 #' mapping from proints to grade
 #'
 #' The dataframe `d` is expected to have a variable `var` which provides the
-#' performance data to be graded.
+#' performance data to be graded (not only one student, but a column of students).
 #' `grading_scheme` is a named numeric vector such as "`4` == .5", etc.
 #' `failing_grades` is defaulted with `c("5", "4.3", "4.7")`.
 #' `number_of_grade` is defaulted with `11` (ie., grades from 1.0, 1.3, ...4, 5)
