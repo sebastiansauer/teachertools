@@ -264,13 +264,13 @@ prep_csv2 <- function(submission_file,
 
 
 
-  Rename the output variable to "y" in solution_df:
+  # Rename the output variable to "y" in solution_df:
   solution_df <-
     solution_df |>
     dplyr::rename(y = {{name_output_var}})
 
 
-  add id column in solution df if not present:
+  # add id column in solution df if not present:
   if (!("id" %in% names(solution_df))) solution_df$id <- start_id:(start_id + nrow(solution_df) - 1)
 
 

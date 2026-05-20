@@ -33,7 +33,7 @@ mapping from proints to grade
 }
 \details{
 The dataframe \code{d} is expected to have a variable \code{var} which provides the
-performance data to be graded.
+performance data to be graded (not only one student, but a column of students).
 \code{grading_scheme} is a named numeric vector such as "\code{4} == .5", etc.
 \code{failing_grades} is defaulted with \code{c("5", "4.3", "4.7")}.
 \code{number_of_grade} is defaulted with \code{11} (ie., grades from 1.0, 1.3, ...4, 5)
