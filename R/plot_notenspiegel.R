@@ -1,5 +1,3 @@
-
-
 #' Plot Notenspiegel
 #'
 #' Plot Grade Distribution (Notenspiegel).
@@ -12,37 +10,47 @@
 #' @param d data frame containing grades
 #' @param plot_title Title to be assigned to the plot
 #' @param var variable holding the grades to be plotted
+#' @param var_prop variable holding the percentages of correct solutions
 #' @param show_prop_avg Should the mean percentage value be shown (defaults to FALSE)
 #'
 #' @return ggplot2 object
 #' @export
 #'
 #' @examples
-#' \dontrun{plot_notenspiegel(grades_data)}
+#' \dontrun{
+#' plot_notenspiegel(grades_data)
+#' }
 plot_notenspiegel <- function(d, plot_title = "Notenverteilung",
                               var = "grade",
-                              show_prop_avg = FALSE){
-
-  grades_scheme <- c(5, 4, 3.7, 3.3, 3.0, 2.7, 2.3, 2, 1.7, 1.3, 1.0)
-
+                              var_prop = "prop",
+                              show_prop_avg = FALSE,
+                              grades_scheme = c(5, 4, 3.7, 3.3, 3.0, 2.7, 2.3, 2, 1.7, 1.3, 1.0)) {
   # d <-
   #   d %>%
   #   rename(Note = dplyr::all_of(var))
 
   names(d)[which(names(d) == var)] <- "Note"
+  names(d)[which(names(d) == var_prop)] <- "prop"
 
   notenschnitt <- round(mean(d[["Note"]], na.rm = TRUE), 1)
+  notenschnitt_chr <- formatC(notenschnitt, digits = 1, format = "f")
 
-  if (is.null(nrow(d[d$Note <= 4, ]))) bestehensquote <- 1
-  else bestehensquote <-
-    round(nrow(d[d$Note <= 4, ]) / base::nrow(d), 2)
+  if (is.null(nrow(d[d$Note <= 4, ]))) {
+    bestehensquote <- 1
+  } else {
+    bestehensquote <-
+      round(nrow(d[d$Note <= 4, ]) / base::nrow(d), 2)
+  }
   grade_mean <-
     round(mean(d$Note, na.rm = TRUE), 2)
   grade_sd <-
     round(sd(d$Note, na.rm = TRUE), 2)
 
-  if (show_prop_avg) prop_avg <- round(mean(d$prop, na.rm = TRUE), 0)
-  else prop_avg <- NA
+  if (show_prop_avg) {
+    prop_avg <- round(mean(d$prop, na.rm = TRUE), 0)
+  } else {
+    prop_avg <- NA
+  }
 
   d$bestanden <- ifelse(d$Note <= 4, TRUE, FALSE)
 
@@ -56,30 +64,34 @@ plot_notenspiegel <- function(d, plot_title = "Notenverteilung",
   data_count %>%
     ggplot2::ggplot(aes(x = Note, y = n)) +
     ggplot2::geom_col(aes(fill = bestanden)) +
-    ggplot2::scale_x_continuous(breaks = grades_scheme)+
+    ggplot2::scale_x_continuous(breaks = grades_scheme) +
     ggplot2::geom_vline(xintercept = notenschnitt, linetype = "dashed") +
     ggplot2::geom_label(aes(label = n)) +
-    ggplot2::labs(x = "Noten",
-                  y = "Anzahl",
-                  title = plot_title,
-                  subtitle = paste0("Mittelwert: ", notenschnitt,
-                                    "; Bestehensquote: ", bestehensquote,
-                                    "\nMittlere Punktzahl (%): ", prop_avg),
-                  caption = paste0("n = ", nrow(d))) +
-    ggplot2::annotate("label", x = notenschnitt, y = max(data_count$n), label = paste0("MW: ", notenschnitt)) +
+    ggplot2::labs(
+      x = "Noten",
+      y = "Anzahl",
+      title = plot_title,
+      subtitle = paste0(
+        "Mittelwert: ", notenschnitt,
+        "; Bestehensquote: ", bestehensquote,
+        "\nMittlere Punktzahl (%): ", prop_avg
+      ),
+      caption = paste0("n = ", nrow(d))
+    ) +
+    ggplot2::annotate("label", x = notenschnitt, y = max(data_count$n), label = paste0("MW: ", notenschnitt_chr)) +
     ggplot2::theme_minimal() +
     ggplot2::annotate("segment",
-                      x = grade_mean-grade_sd, xend = grade_mean + grade_sd,
-                      y = 0, yend = 0,
-                      size = 3,
-                      color = "grey20",
-                      #fill = "grey20",
-                      alpha = .9) +
+      x = grade_mean - grade_sd, xend = grade_mean + grade_sd,
+      y = 0, yend = 0,
+      size = 3,
+      color = "grey20",
+      # fill = "grey20",
+      alpha = .9
+    ) +
     ggplot2::scale_fill_viridis_d() +
     ggplot2::annotate("label",
-                      x = grade_mean,
-                      y = 0,
-                      label  = paste0("SD: ", grade_sd))
-
+      x = grade_mean,
+      y = 0,
+      label = paste0("SD: ", grade_sd)
+    )
 }
-

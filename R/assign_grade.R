@@ -21,41 +21,52 @@
 #' @export
 #'
 #' @examples
-#'assign_grade(mtcars, var = "am")
+#' assign_grade(mtcars, var = "am")
 #'
 assign_grade <- function(
-    d,
-    grading_scheme = NULL,
-    var = "correct_prop",
-    failing_grades= c("5", "4.3", "4.7"),
-    number_of_grades = 11
-    ) {
-
-
+  d,
+  grading_scheme = NULL,
+  var,
+  failing_grades = c("5")
+) {
   # if no grading scheme is provided by the user, use this one:
   if (is.null(grading_scheme)) {
-    grading_scheme <- c("5"   = 0,
-                        "4"   = .45,
-                        "3.7" = .50,
-                        "3.3" = .55,
-                        "3.0" = .60,
-                        "2.7" = .66,
-                        "2.3" = .70,
-                        "2.0" = .75,
-                        "1.7" = .80,
-                        "1.3" = .85,
-                        "1.0" = .90)
+    grading_scheme <- c(
+      "5" = 0,
+      "4" = .45,
+      "3.7" = .50,
+      "3.3" = .55,
+      "3.0" = .60,
+      "2.7" = .66,
+      "2.3" = .70,
+      "2.0" = .75,
+      "1.7" = .80,
+      "1.3" = .85,
+      "1.0" = .90
+    )
   }
-  stopifnot(length(grading_scheme) == number_of_grades)
+
+  if (grading_scheme == "full_grades") {
+    grading_scheme <- c(
+      "5" = 0,
+      "4" = .50,
+      "3" = .62,
+      "2" = .75,
+      "1" = .88
+    )
+  }
+
+  # stopifnot(length(grading_scheme) == number_of_grades)
 
 
   # cut the target (performance) variable in bins,
   # according to the number of grades and according to the grading scheme:
-    d$grade_f <- cut(
+  d$grade_f <- cut(
     d[[var]],
     breaks = c(grading_scheme, 1.01),
     labels = names(grading_scheme),
-    right = FALSE)
+    right = FALSE
+  )
 
   # pass, if not in the failing grades!
   d$pass <- !(d$grade_f %in% failing_grades)
@@ -63,5 +74,4 @@ assign_grade <- function(
   d$grade <- as.numeric(as.character(d$grade_f))
 
   return(d)
-
 }

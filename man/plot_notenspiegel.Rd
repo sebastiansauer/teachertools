@@ -8,6 +8,7 @@ plot_notenspiegel(
   d,
   plot_title = "Notenverteilung",
   var = "grade",
+  var_prop = "prop",
   show_prop_avg = FALSE
 )
 }
@@ -17,6 +18,8 @@ plot_notenspiegel(
 \item{plot_title}{Title to be assigned to the plot}
 
 \item{var}{variable holding the grades to be plotted}
+
+\item{var_prop}{variable holding the percentages of correct solutions}
 
 \item{show_prop_avg}{Should the mean percentage value be shown (defaults to FALSE)}
 }
@@ -33,5 +36,7 @@ Annotations are currently in German language
 IF \code{show_prop_avg} is TRUE, it is expected that a column by the name of \code{prop} is available which holds the percentage of points achieved by student
 }
 \examples{
-\dontrun{plot_notenspiegel(grades_data)}
+\dontrun{
+plot_notenspiegel(grades_data)
+}
 }

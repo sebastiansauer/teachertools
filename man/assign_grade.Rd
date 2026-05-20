@@ -4,13 +4,7 @@
 \alias{assign_grade}
 \title{Assign Grades}
 \usage{
-assign_grade(
-  d,
-  grading_scheme = NULL,
-  var = "correct_prop",
-  failing_grades = c("5", "4.3", "4.7"),
-  number_of_grades = 11
-)
+assign_grade(d, grading_scheme = NULL, var, failing_grades = c("5"))
 }
 \arguments{
 \item{d}{data frame}
@@ -30,6 +24,14 @@ data frame with grades (column) added
 Given a variable with points, percentage or other, a grade is
 assigned given a grading scheme which acts as a function ascribing the
 mapping from proints to grade
+}
+\details{
+The dataframe \code{d} is expected to have a variable \code{var} which provides the
+performance data to be graded.
+\code{grading_scheme} is a named numeric vector such as "\code{4} == .5", etc.
+\code{failing_grades} is defaulted with \code{c("5", "4.3", "4.7")}.
+\code{number_of_grade} is defaulted with \code{11} (ie., grades from 1.0, 1.3, ...4, 5)
+\code{var} is defaulted with \code{"correct_prop"}
 }
 \examples{
 assign_grade(mtcars, var = "am")
