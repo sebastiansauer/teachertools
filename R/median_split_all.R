@@ -5,7 +5,7 @@
 #' Expects numeric variables only.
 #' Split variables are factors with the levels "high" and "low".
 #'
-#' @param data
+#' @param data dataframe holding the data
 #'
 #' @return dataframe with median splitted variables as factors
 #' @export

@@ -11,7 +11,10 @@ Description: Tools for (a) grading students such as mapping percentage points
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 LazyData: true
+<<<<<<< HEAD
 RoxygenNote: 7.3.3
+=======
+>>>>>>> e10612fcb8bac6580dc6942a9582d60622e57b27
 Imports:
   dplyr,
     purrr,
@@ -29,3 +32,4 @@ Suggests:
 VignetteBuilder: knitr
 License: MIT + file LICENSE
 Config/testthat/edition: 3
+Config/roxygen2/version: 8.0.0

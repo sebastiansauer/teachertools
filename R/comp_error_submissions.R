@@ -125,7 +125,7 @@ comp_error_submissions <- function(
   d4 <-
     d3 |>
     dplyr::mutate(error_coef = purrr::map(data,
-                                          ~error_fun(truth = y,
+                                          ~rmse(truth = y,
                                                      estimate = pred,
                                                      data = .x)))
   # set `error_fun <- mae` during debugging!

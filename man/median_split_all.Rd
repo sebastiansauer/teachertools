@@ -6,9 +6,6 @@
 \usage{
 median_split_all(data)
 }
-\arguments{
-\item{data}{}
-}
 \value{
 dataframe with median splitted variables as factors
 }
